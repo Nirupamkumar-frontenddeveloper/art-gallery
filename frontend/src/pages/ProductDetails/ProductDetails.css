@@ -1,0 +1,156 @@
+.product-details-page {
+  background: #f8f6f3;
+  min-height: 100vh;
+  padding: 80px;
+}
+
+.product-details-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 100px;
+}
+
+.product-details-image img {
+  width: 100%;
+  border-radius: 24px;
+  display: block;
+}
+
+.product-category {
+  color: #b08d57;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 12px;
+}
+
+.product-details-content h1 {
+  font-size: 56px;
+  margin: 15px 0;
+  color: #222;
+}
+
+.product-price {
+  font-size: 38px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 25px;
+}
+
+.product-description {
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 30px;
+}
+
+.product-features {
+  display: grid;
+  gap: 15px;
+  margin-bottom: 35px;
+}
+
+.feature {
+  color: #444;
+}
+
+.product-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.add-cart-btn,
+.buy-now-btn {
+  padding: 16px 28px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.add-cart-btn {
+  background: #222;
+  color: white;
+}
+
+.buy-now-btn {
+  background: #b08d57;
+  color: white;
+}
+
+.reviews-section {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.reviews-section h2 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.review-card {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.review-card h4 {
+  margin-bottom: 8px;
+}
+
+.review-card span {
+  color: #b08d57;
+}
+
+.review-card p {
+  margin-top: 10px;
+  color: #666;
+}
+
+.write-review {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  margin-top: 40px;
+}
+
+.write-review textarea {
+  width: 100%;
+  height: 140px;
+  padding: 15px;
+  margin: 20px 0;
+  resize: none;
+}
+
+.write-review button {
+  background: #222;
+  color: white;
+  border: none;
+  padding: 14px 25px;
+  cursor: pointer;
+}
+
+.product-not-found {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+@media (max-width: 900px) {
+  .product-details-page {
+    padding: 40px 20px;
+  }
+
+  .product-details-container {
+    grid-template-columns: 1fr;
+  }
+
+  .product-details-content h1 {
+    font-size: 40px;
+  }
+
+  .product-buttons {
+    flex-direction: column;
+  }
+}
