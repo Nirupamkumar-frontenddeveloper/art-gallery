@@ -4,6 +4,12 @@
       "root": "frontend",
       "routePrefix": "/",
       "framework": "vite"
+    },
+    "backend": {
+      "root": "backend",
+      "routePrefix": "/api",
+      "runtime": "nodejs22.x",
+      "entrypoint": "server.js"
     }
   }
 }

@@ -1,7 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import "./Cart.css";
 
 function Cart() {
+  const navigate = useNavigate();
+
   const {
     cartItems,
     removeFromCart,
@@ -15,16 +18,31 @@ function Cart() {
     0
   );
 
+  const handleCheckout = () => {
+    navigate("/checkout", {
+      state: {
+        type: "cart",
+        items: cartItems,
+        total,
+      },
+    });
+  };
+
   return (
     <div className="cart-page">
 
       <div className="cart-header">
-        <h1>Your Cart</h1>
+        <span>YOUR SELECTIONS</span>
+        <h1>Shopping Cart</h1>
       </div>
 
       {cartItems.length === 0 ? (
         <div className="empty-cart">
-          Your cart is empty
+          <h2>Your Cart Is Empty</h2>
+          <p>
+            Add some beautiful artwork
+            to get started.
+          </p>
         </div>
       ) : (
         <>
@@ -42,8 +60,20 @@ function Cart() {
                 />
 
                 <div className="cart-info">
+
                   <h3>{item.title}</h3>
-                  <p>₹{item.price}</p>
+
+                  <p className="item-price">
+                    ₹{item.price}
+                  </p>
+
+                  <p className="item-total">
+                    Total :
+                    ₹
+                    {item.price *
+                      item.quantity}
+                  </p>
+
                 </div>
 
                 <div className="quantity-box">
@@ -53,7 +83,7 @@ function Cart() {
                       decreaseQty(item.id)
                     }
                   >
-                    -
+                    −
                   </button>
 
                   <span>
@@ -86,12 +116,21 @@ function Cart() {
 
           <div className="cart-summary">
 
-            <h2>
-              Total : ₹{total}
-            </h2>
+            <div className="summary-top">
+              <h2>
+                Total Amount
+              </h2>
 
-            <button className="checkout-btn">
-              Proceed To Checkout
+              <h1>
+                ₹{total}
+              </h1>
+            </div>
+
+            <button
+              className="checkout-btn"
+              onClick={handleCheckout}
+            >
+              Proceed To Checkout →
             </button>
 
           </div>

@@ -1,0 +1,63 @@
+.order-details-page {
+  min-height: 100vh;
+  background: #f8f6f3;
+  padding: 80px;
+}
+
+.order-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.order-header span {
+  color: #b08d57;
+  font-size: 12px;
+  letter-spacing: 4px;
+}
+
+.order-header h1 {
+  font-size: 50px;
+  font-family: "Cormorant Garamond", serif;
+  margin-top: 10px;
+}
+
+.order-status-card,
+.customer-details,
+.order-products,
+.payment-info {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  margin-bottom: 25px;
+}
+
+.status-badge {
+  margin-top: 15px;
+  display: inline-block;
+  padding: 10px 20px;
+  background: #222;
+  color: white;
+  border-radius: 50px;
+}
+
+.order-product-card {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.order-product-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.loading-order {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+}

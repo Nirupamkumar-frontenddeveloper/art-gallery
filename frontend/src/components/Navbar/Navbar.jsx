@@ -58,7 +58,11 @@ function Navbar() {
 
       </div>
 
-      <nav className={`menu-links ${menuOpen ? "active" : ""}`}>
+      <nav
+        className={`menu-links ${
+          menuOpen ? "active" : ""
+        }`}
+      >
         <Link
           to="/"
           onClick={() => setMenuOpen(false)}
@@ -67,7 +71,7 @@ function Navbar() {
         </Link>
 
         <Link
-          to="/paintings"
+          to="/paintings/portrait"
           onClick={() => setMenuOpen(false)}
         >
           Paintings
@@ -81,17 +85,10 @@ function Navbar() {
         </Link>
 
         <Link
-          to="/help"
+          to="/my-orders"
           onClick={() => setMenuOpen(false)}
         >
-          Help
-        </Link>
-
-        <Link
-          to="/contact"
-          onClick={() => setMenuOpen(false)}
-        >
-          Contact
+          Orders
         </Link>
       </nav>
     </header>

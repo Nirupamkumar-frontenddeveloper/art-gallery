@@ -78,6 +78,10 @@ export const CartProvider = ({
     );
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   const isInCart = (id) => {
     return cartItems.some(
       (item) => item.id === id
@@ -92,6 +96,7 @@ export const CartProvider = ({
         removeFromCart,
         increaseQty,
         decreaseQty,
+        clearCart,
         isInCart,
       }}
     >

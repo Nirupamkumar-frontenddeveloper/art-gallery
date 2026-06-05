@@ -1,10 +1,11 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { products } from "../../data/products";
 import { useCart } from "../../context/CartContext";
 import "./ProductDetails.css";
 
 function ProductDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const {
     addToCart,
@@ -22,6 +23,15 @@ function ProductDetails() {
       </div>
     );
   }
+
+  const handleBuyNow = () => {
+    navigate("/checkout", {
+      state: {
+        type: "single",
+        product,
+      },
+    });
+  };
 
   return (
     <div className="product-details-page">
@@ -91,7 +101,10 @@ function ProductDetails() {
               </button>
             )}
 
-            <button className="buy-now-btn">
+            <button
+              className="buy-now-btn"
+              onClick={handleBuyNow}
+            >
               Buy Now
             </button>
 

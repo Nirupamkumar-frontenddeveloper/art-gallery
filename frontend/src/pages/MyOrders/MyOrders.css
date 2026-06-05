@@ -1,0 +1,54 @@
+.my-orders-page {
+  min-height: 100vh;
+  background: #f8f6f3;
+  padding: 80px;
+}
+
+.orders-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.orders-header span {
+  color: #b08d57;
+  letter-spacing: 4px;
+  font-size: 12px;
+}
+
+.orders-header h1 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 60px;
+  margin-top: 10px;
+}
+
+.search-box {
+  max-width: 600px;
+  margin: auto;
+  display: flex;
+  gap: 15px;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 16px;
+}
+
+.search-box button {
+  padding: 16px 25px;
+  background: #222;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.orders-grid {
+  margin-top: 50px;
+  display: grid;
+  gap: 20px;
+}
+
+.order-card {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+}
