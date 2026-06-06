@@ -15,7 +15,7 @@ function OrderDetails() {
   const fetchOrder = async () => {
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/api/orders/${id}`
+        `https://artionary-backend.onrender.com/api/orders/${id}`
       );
 
       setOrder(data);
@@ -36,107 +36,177 @@ function OrderDetails() {
     <div className="order-details-page">
 
       <div className="order-header">
-        <span>ORDER DETAILS</span>
 
-        <h1>{order.orderId}</h1>
+        <span>
+          ORDER DETAILS
+        </span>
+
+        <h1>
+          {order.orderId}
+        </h1>
+
       </div>
 
       <div className="order-status-card">
 
-        <h2>Current Status</h2>
+        <h2>
+          Current Status
+        </h2>
 
-        <div className={`status-badge ${order.orderStatus}`}>
-          {order.orderStatus}
+        <div
+          className={`status-badge`}
+        >
+          {
+            order.orderStatus
+          }
         </div>
 
       </div>
 
       <div className="customer-details">
 
-        <h2>Customer Information</h2>
+        <h2>
+          Customer Information
+        </h2>
 
         <p>
-          <strong>Name:</strong>
+          <strong>
+            Name:
+          </strong>
           {" "}
-          {order.customerName}
+          {
+            order.customerName
+          }
         </p>
 
         <p>
-          <strong>Phone:</strong>
+          <strong>
+            Phone:
+          </strong>
           {" "}
-          {order.phone}
+          {
+            order.phone
+          }
         </p>
 
         <p>
-          <strong>Pincode:</strong>
+          <strong>
+            Pincode:
+          </strong>
           {" "}
-          {order.pincode}
+          {
+            order.pincode
+          }
         </p>
 
         <p>
-          <strong>Address:</strong>
+          <strong>
+            Address:
+          </strong>
           {" "}
-          {order.address}
+          {
+            order.address
+          }
         </p>
 
       </div>
 
       <div className="order-products">
 
-        <h2>Ordered Products</h2>
+        <h2>
+          Ordered Products
+        </h2>
 
-        {order.items?.map((item) => (
-          <div
-            className="order-product-card"
-            key={item.productId}
-          >
+        {order.items?.map(
+          (item) => (
+            <div
+              className="order-product-card"
+              key={
+                item.productId
+              }
+            >
 
-            <img
-              src={item.image}
-              alt={item.title}
-            />
+              <img
+                src={
+                  item.image
+                }
+                alt={
+                  item.title
+                }
+              />
 
-            <div>
+              <div>
 
-              <h3>{item.title}</h3>
+                <h3>
+                  {item.title}
+                </h3>
 
-              <p>
-                Quantity :
-                {" "}
-                {item.quantity}
-              </p>
+                <p>
+                  Quantity :
+                  {" "}
+                  {
+                    item.quantity
+                  }
+                </p>
 
-              <p>
-                ₹{item.price}
-              </p>
+                <p>
+                  Price :
+                  ₹
+                  {
+                    item.price
+                  }
+                </p>
+
+                <p>
+                  Total :
+                  ₹
+                  {item.price *
+                    item.quantity}
+                </p>
+
+              </div>
 
             </div>
-
-          </div>
-        ))}
+          )
+        )}
 
       </div>
 
       <div className="payment-info">
 
-        <h2>Payment Information</h2>
+        <h2>
+          Payment Information
+        </h2>
 
         <p>
-          <strong>Payment Status:</strong>
+          <strong>
+            Payment Status:
+          </strong>
           {" "}
-          {order.paymentStatus}
+          {
+            order.paymentStatus
+          }
         </p>
 
         <p>
-          <strong>Total Amount:</strong>
+          <strong>
+            Total Amount:
+          </strong>
           {" "}
-          ₹{order.totalAmount}
+          ₹
+          {
+            order.totalAmount
+          }
         </p>
 
         <p>
-          <strong>Payment ID:</strong>
+          <strong>
+            Payment ID:
+          </strong>
           {" "}
-          {order.razorpayPaymentId}
+          {
+            order.razorpayPaymentId
+          }
         </p>
 
       </div>

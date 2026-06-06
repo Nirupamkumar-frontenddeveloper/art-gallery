@@ -49,7 +49,7 @@ function Checkout() {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/create-order",
+        "https://artionary-backend.onrender.com/api/create-order",
         {
           amount: totalAmount * 100,
         }
@@ -86,84 +86,100 @@ function Checkout() {
         handler: async (
           response
         ) => {
-          const verify =
-            await axios.post(
-              "http://localhost:5000/api/verify-payment",
-              {
-                ...response,
+          try {
+            const verify =
+              await axios.post(
+                "https://artionary-backend.onrender.com/api/verify-payment",
+                {
+                  ...response,
 
-                customerName:
-                  formData.fullName,
+                  customerName:
+                    formData.fullName,
 
-                phone:
-                  formData.phone,
+                  phone:
+                    formData.phone,
 
-                address:
-                  formData.address,
+                  address:
+                    formData.address,
 
-                pincode:
-                  formData.pincode,
+                  pincode:
+                    formData.pincode,
 
-                items:
-                  checkoutData.type ===
-                  "single"
-                    ? [
-                        {
-                          productId:
-                            checkoutData
-                              .product.id,
+                  items:
+                    checkoutData.type ===
+                    "single"
+                      ? [
+                          {
+                            productId:
+                              checkoutData
+                                .product.id,
 
-                          title:
-                            checkoutData
-                              .product.title,
+                            title:
+                              checkoutData
+                                .product.title,
 
-                          image:
-                            checkoutData
-                              .product.image,
+                            image:
+                              checkoutData
+                                .product.image,
 
-                          quantity: 1,
+                            quantity: 1,
 
-                          price:
-                            checkoutData
-                              .product.price,
-                        },
-                      ]
-                    : checkoutData.items.map(
-                        (
-                          item
-                        ) => ({
-                          productId:
-                            item.id,
+                            price:
+                              checkoutData
+                                .product.price,
+                          },
+                        ]
+                      : checkoutData.items.map(
+                          (
+                            item
+                          ) => ({
+                            productId:
+                              item.id,
 
-                          title:
-                            item.title,
+                            title:
+                              item.title,
 
-                          image:
-                            item.image,
+                            image:
+                              item.image,
 
-                          quantity:
-                            item.quantity,
+                            quantity:
+                              item.quantity,
 
-                          price:
-                            item.price,
-                        })
-                      ),
+                            price:
+                              item.price,
+                          })
+                        ),
 
-                totalAmount,
-              }
-            );
+                  totalAmount,
+                }
+              );
 
-          if (
-            verify.data.success
-          ) {
+            if (
+              verify.data.success
+            ) {
+              alert(
+                "Payment Successful"
+              );
+
+              navigate(
+                "/my-orders"
+              );
+            }
+          } catch (error) {
+            console.log(error);
+
             alert(
-              "Payment Successful"
-            );
-
-            navigate(
-              "/my-orders"
+              "Payment Verification Failed"
             );
           }
+        },
+
+        modal: {
+          ondismiss: () => {
+            alert(
+              "Payment Cancelled"
+            );
+          },
         },
       };
 
@@ -171,6 +187,15 @@ function Checkout() {
         new window.Razorpay(
           options
         );
+
+      razorpay.on(
+        "payment.failed",
+        () => {
+          alert(
+            "Payment Failed"
+          );
+        }
+      );
 
       razorpay.open();
     } catch (error) {
@@ -285,6 +310,9 @@ function Checkout() {
             type="text"
             name="fullName"
             placeholder="Full Name"
+            value={
+              formData.fullName
+            }
             onChange={
               handleChange
             }
@@ -294,6 +322,9 @@ function Checkout() {
             type="text"
             name="phone"
             placeholder="Phone Number"
+            value={
+              formData.phone
+            }
             onChange={
               handleChange
             }
@@ -302,6 +333,9 @@ function Checkout() {
           <textarea
             name="address"
             placeholder="Address"
+            value={
+              formData.address
+            }
             onChange={
               handleChange
             }
@@ -311,6 +345,9 @@ function Checkout() {
             type="text"
             name="pincode"
             placeholder="Pincode"
+            value={
+              formData.pincode
+            }
             onChange={
               handleChange
             }

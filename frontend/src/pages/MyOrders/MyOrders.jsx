@@ -10,10 +10,14 @@ function MyOrders() {
   const searchOrders = async () => {
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/api/orders-by-phone/${phone}`
+        `https://artionary-backend.onrender.com/api/orders-by-phone/${phone}`
       );
 
       setOrders(data);
+
+      if (data.length === 0) {
+        alert("No Orders Found");
+      }
     } catch (error) {
       console.log(error);
       alert("No Orders Found");
@@ -53,17 +57,33 @@ function MyOrders() {
             key={order._id}
           >
 
-            <h3>{order.orderId}</h3>
+            <div className="order-top">
 
-            <p>
-              Status :
-              {" "}
-              {order.orderStatus}
-            </p>
+              <h3>
+                {order.orderId}
+              </h3>
+
+              <span className="order-status">
+                {order.orderStatus}
+              </span>
+
+            </div>
 
             <p>
               Amount :
               ₹{order.totalAmount}
+            </p>
+
+            <p>
+              Payment :
+              {order.paymentStatus}
+            </p>
+
+            <p>
+              Date :
+              {new Date(
+                order.createdAt
+              ).toLocaleDateString()}
             </p>
 
             <Link

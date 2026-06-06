@@ -12,7 +12,7 @@ function AdminOrders() {
   const fetchOrders = async () => {
     try {
       const { data } = await axios.get(
-        "http://localhost:5000/api/orders"
+        "https://artionary-backend.onrender.com/api/orders"
       );
 
       setOrders(data);
@@ -27,7 +27,7 @@ function AdminOrders() {
   ) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/orders/${orderId}/status`,
+        `https://artionary-backend.onrender.com/api/orders/${orderId}/status`,
         {
           orderStatus: status,
         }
@@ -55,31 +55,48 @@ function AdminOrders() {
             key={order._id}
           >
 
-            <h3>{order.orderId}</h3>
+            <div className="admin-order-top">
+
+              <h3>
+                {order.orderId}
+              </h3>
+
+              <span className="status-badge">
+                {order.orderStatus}
+              </span>
+
+            </div>
 
             <p>
-              Customer :
+              <strong>
+                Customer:
+              </strong>
               {" "}
               {order.customerName}
             </p>
 
             <p>
-              Phone :
+              <strong>
+                Phone:
+              </strong>
               {" "}
               {order.phone}
             </p>
 
             <p>
-              Amount :
+              <strong>
+                Amount:
+              </strong>
+              {" "}
               ₹{order.totalAmount}
             </p>
 
             <p>
-              Status :
-              {" "}
               <strong>
-                {order.orderStatus}
+                Payment:
               </strong>
+              {" "}
+              {order.paymentStatus}
             </p>
 
             <div className="status-buttons">
