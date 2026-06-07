@@ -50,6 +50,8 @@ router.post(
 
       res.status(500).json({
         success: false,
+        message:
+          "Order creation failed",
       });
     }
   }
@@ -159,6 +161,10 @@ router.get(
       const snapshot =
         await db
           .collection("orders")
+          .orderBy(
+            "createdAt",
+            "desc"
+          )
           .get();
 
       const orders = [];
@@ -169,16 +175,6 @@ router.get(
           ...doc.data(),
         });
       });
-
-      orders.sort(
-        (a, b) =>
-          new Date(
-            b.createdAt
-          ) -
-          new Date(
-            a.createdAt
-          )
-      );
 
       res.json(orders);
     } catch (error) {
@@ -202,6 +198,14 @@ router.get(
             req.params.id
           )
           .get();
+
+      if (!doc.exists) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Order not found",
+        });
+      }
 
       res.json({
         _id: doc.id,
@@ -240,6 +244,16 @@ router.get(
         });
       });
 
+      orders.sort(
+        (a, b) =>
+          new Date(
+            b.createdAt
+          ) -
+          new Date(
+            a.createdAt
+          )
+      );
+
       res.json(orders);
     } catch (error) {
       console.log(error);
@@ -266,10 +280,14 @@ router.put(
         )
         .update({
           orderStatus,
+          updatedAt:
+            new Date().toISOString(),
         });
 
       res.json({
         success: true,
+        message:
+          "Status Updated",
       });
     } catch (error) {
       console.log(error);
