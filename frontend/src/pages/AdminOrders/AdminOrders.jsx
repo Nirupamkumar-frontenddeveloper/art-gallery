@@ -4,6 +4,8 @@ import "./AdminOrders.css";
 
 function AdminOrders() {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] =
+    useState(true);
 
   useEffect(() => {
     fetchOrders();
@@ -11,6 +13,8 @@ function AdminOrders() {
 
   const fetchOrders = async () => {
     try {
+      setLoading(true);
+
       const { data } = await axios.get(
         "https://artionary-backend.onrender.com/api/orders"
       );
@@ -18,6 +22,8 @@ function AdminOrders() {
       setOrders(data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,73 +40,108 @@ function AdminOrders() {
       );
 
       fetchOrders();
+
+      alert(
+        `Order status updated to ${status}`
+      );
     } catch (error) {
       console.log(error);
+      alert(
+        "Failed to update status"
+      );
     }
   };
 
+  if (loading) {
+    return (
+      <div className="loading-orders">
+        Loading Orders...
+      </div>
+    );
+  }
+
   return (
     <div className="admin-orders-page">
-
       <div className="admin-header">
         <span>ADMIN PANEL</span>
         <h1>Manage Orders</h1>
       </div>
 
       <div className="admin-orders-grid">
-
         {orders.map((order) => (
           <div
             className="admin-order-card"
             key={order._id}
           >
-
             <div className="admin-order-top">
-
               <h3>
                 {order.orderId}
               </h3>
 
               <span className="status-badge">
-                {order.orderStatus}
+                {
+                  order.orderStatus
+                }
               </span>
-
             </div>
 
             <p>
               <strong>
                 Customer:
-              </strong>
-              {" "}
-              {order.customerName}
+              </strong>{" "}
+              {
+                order.customerName
+              }
             </p>
 
             <p>
               <strong>
                 Phone:
-              </strong>
-              {" "}
+              </strong>{" "}
               {order.phone}
             </p>
 
             <p>
               <strong>
                 Amount:
-              </strong>
-              {" "}
-              ₹{order.totalAmount}
+              </strong>{" "}
+              ₹
+              {
+                order.totalAmount
+              }
             </p>
 
             <p>
               <strong>
                 Payment:
-              </strong>
-              {" "}
-              {order.paymentStatus}
+              </strong>{" "}
+              {
+                order.paymentStatus
+              }
+            </p>
+
+            <p>
+              <strong>
+                Products:
+              </strong>{" "}
+              {
+                order.items
+                  ?.length
+              }
+            </p>
+
+            <p>
+              <strong>
+                Date:
+              </strong>{" "}
+              {order.createdAt
+                ? new Date(
+                    order.createdAt
+                  ).toLocaleString()
+                : "-"}
             </p>
 
             <div className="status-buttons">
-
               <button
                 onClick={() =>
                   updateStatus(
@@ -155,14 +196,10 @@ function AdminOrders() {
               >
                 Delivered
               </button>
-
             </div>
-
           </div>
         ))}
-
       </div>
-
     </div>
   );
 }

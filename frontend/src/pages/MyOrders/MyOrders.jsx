@@ -1,48 +1,26 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import "./MyOrders.css";
 
 function MyOrders() {
+  const [phone, setPhone] = useState("");
   const [orders, setOrders] = useState([]);
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
+  const searchOrders = async () => {
     try {
       const { data } = await axios.get(
-        "https://artionary-backend.onrender.com/api/orders"
+        `https://artionary-backend.onrender.com/api/orders-by-phone/${phone}`
       );
 
-      const sortedOrders = [...data].sort(
-        (a, b) =>
-          new Date(b.createdAt) -
-          new Date(a.createdAt)
-      );
+      setOrders(data);
 
-      setOrders(sortedOrders);
+      if (data.length === 0) {
+        alert("No Orders Found");
+      }
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const updateStatus = async (
-    orderId,
-    status
-  ) => {
-    try {
-      await axios.put(
-        `https://artionary-backend.onrender.com/api/orders/${orderId}/status`,
-        {
-          orderStatus: status,
-        }
-      );
-
-      fetchOrders();
-    } catch (error) {
-      console.log(error);
-      alert("Status Update Failed");
+      alert("No Orders Found");
     }
   };
 
@@ -50,8 +28,25 @@ function MyOrders() {
     <div className="my-orders-page">
 
       <div className="orders-header">
-        <span>ADMIN PANEL</span>
-        <h1>All Orders</h1>
+        <span>TRACK ORDERS</span>
+        <h1>My Orders</h1>
+      </div>
+
+      <div className="search-box">
+
+        <input
+          type="text"
+          placeholder="Enter Phone Number"
+          value={phone}
+          onChange={(e) =>
+            setPhone(e.target.value)
+          }
+        />
+
+        <button onClick={searchOrders}>
+          Find Orders
+        </button>
+
       </div>
 
       <div className="orders-grid">
@@ -61,6 +56,7 @@ function MyOrders() {
             className="order-card"
             key={order._id}
           >
+
             <div className="order-top">
 
               <h3>
@@ -74,100 +70,28 @@ function MyOrders() {
             </div>
 
             <p>
-              <strong>
-                Customer:
-              </strong>{" "}
-              {order.customerName}
+              Amount : ₹{order.totalAmount}
             </p>
 
             <p>
-              <strong>
-                Phone:
-              </strong>{" "}
-              {order.phone}
+              Payment : {order.paymentStatus}
             </p>
 
             <p>
-              <strong>
-                Amount:
-              </strong>{" "}
-              ₹{order.totalAmount}
-            </p>
-
-            <p>
-              <strong>
-                Payment:
-              </strong>{" "}
-              {order.paymentStatus}
-            </p>
-
-            <p>
-              <strong>
-                Date:
-              </strong>{" "}
+              Date :
+              {" "}
               {new Date(
                 order.createdAt
-              ).toLocaleString()}
+              ).toLocaleDateString()}
             </p>
 
-            <div className="status-buttons">
+            <Link
+              to={`/order/${order._id}`}
+              className="art-btn"
+            >
+              View Order
+            </Link>
 
-              <button
-                onClick={() =>
-                  updateStatus(
-                    order._id,
-                    "Order Placed"
-                  )
-                }
-              >
-                Order Placed
-              </button>
-
-              <button
-                onClick={() =>
-                  updateStatus(
-                    order._id,
-                    "In Packing"
-                  )
-                }
-              >
-                In Packing
-              </button>
-
-              <button
-                onClick={() =>
-                  updateStatus(
-                    order._id,
-                    "Shipped"
-                  )
-                }
-              >
-                Shipped
-              </button>
-
-              <button
-                onClick={() =>
-                  updateStatus(
-                    order._id,
-                    "Out For Delivery"
-                  )
-                }
-              >
-                Out For Delivery
-              </button>
-
-              <button
-                onClick={() =>
-                  updateStatus(
-                    order._id,
-                    "Delivered"
-                  )
-                }
-              >
-                Delivered
-              </button>
-
-            </div>
           </div>
         ))}
 
