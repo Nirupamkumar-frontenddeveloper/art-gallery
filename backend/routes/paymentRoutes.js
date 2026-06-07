@@ -2,7 +2,7 @@ const express = require("express");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 
-const Order = require("../models/Order");
+const db = require("../firebase");
 
 const router = express.Router();
 
@@ -31,18 +31,14 @@ router.post(
         });
       }
 
-      const options = {
-        amount: Number(amount),
-        currency: "INR",
-        receipt: `receipt_${Date.now()}`,
-      };
-
       const order =
-        await razorpay.orders.create(
-          options
-        );
+        await razorpay.orders.create({
+          amount: Number(amount),
+          currency: "INR",
+          receipt: `receipt_${Date.now()}`,
+        });
 
-      res.status(200).json({
+      res.json({
         success: true,
         id: order.id,
         amount: order.amount,
@@ -54,8 +50,6 @@ router.post(
 
       res.status(500).json({
         success: false,
-        message:
-          "Order creation failed",
       });
     }
   }
@@ -91,14 +85,13 @@ router.post(
             process.env
               .RAZORPAY_KEY_SECRET
           )
-          .update(body.toString())
+          .update(body)
           .digest("hex");
 
-      const verified =
-        expectedSignature ===
-        razorpay_signature;
-
-      if (!verified) {
+      if (
+        expectedSignature !==
+        razorpay_signature
+      ) {
         return res.status(400).json({
           success: false,
           message:
@@ -106,39 +99,46 @@ router.post(
         });
       }
 
-      const newOrder =
-        await Order.create({
-          orderId:
-            "ORD-" +
-            Date.now(),
+      const orderData = {
+        orderId:
+          "ORD-" + Date.now(),
 
-          customerName,
+        customerName,
 
-          phone,
+        phone,
 
-          address,
+        address,
 
-          pincode,
+        pincode,
 
-          items,
+        items,
 
-          totalAmount,
+        totalAmount,
 
-          razorpayOrderId:
-            razorpay_order_id,
+        razorpayOrderId:
+          razorpay_order_id,
 
-          razorpayPaymentId:
-            razorpay_payment_id,
+        razorpayPaymentId:
+          razorpay_payment_id,
 
-          paymentStatus: "Paid",
+        paymentStatus: "Paid",
 
-          orderStatus:
-            "Order Placed",
-        });
+        orderStatus:
+          "Order Placed",
 
-      res.status(200).json({
+        createdAt:
+          new Date().toISOString(),
+      };
+
+      const docRef =
+        await db
+          .collection("orders")
+          .add(orderData);
+
+      res.json({
         success: true,
-        order: newOrder,
+        orderId:
+          docRef.id,
       });
     } catch (error) {
       console.log(error);
@@ -156,13 +156,34 @@ router.get(
   "/orders",
   async (req, res) => {
     try {
-      const orders =
-        await Order.find().sort({
-          createdAt: -1,
+      const snapshot =
+        await db
+          .collection("orders")
+          .get();
+
+      const orders = [];
+
+      snapshot.forEach((doc) => {
+        orders.push({
+          _id: doc.id,
+          ...doc.data(),
         });
+      });
+
+      orders.sort(
+        (a, b) =>
+          new Date(
+            b.createdAt
+          ) -
+          new Date(
+            a.createdAt
+          )
+      );
 
       res.json(orders);
     } catch (error) {
+      console.log(error);
+
       res.status(500).json({
         success: false,
       });
@@ -174,13 +195,21 @@ router.get(
   "/orders/:id",
   async (req, res) => {
     try {
-      const order =
-        await Order.findById(
-          req.params.id
-        );
+      const doc =
+        await db
+          .collection("orders")
+          .doc(
+            req.params.id
+          )
+          .get();
 
-      res.json(order);
+      res.json({
+        _id: doc.id,
+        ...doc.data(),
+      });
     } catch (error) {
+      console.log(error);
+
       res.status(500).json({
         success: false,
       });
@@ -192,16 +221,29 @@ router.get(
   "/orders-by-phone/:phone",
   async (req, res) => {
     try {
-      const orders =
-        await Order.find({
-          phone:
-            req.params.phone,
-        }).sort({
-          createdAt: -1,
+      const snapshot =
+        await db
+          .collection("orders")
+          .where(
+            "phone",
+            "==",
+            req.params.phone
+          )
+          .get();
+
+      const orders = [];
+
+      snapshot.forEach((doc) => {
+        orders.push({
+          _id: doc.id,
+          ...doc.data(),
         });
+      });
 
       res.json(orders);
     } catch (error) {
+      console.log(error);
+
       res.status(500).json({
         success: false,
       });
@@ -213,22 +255,25 @@ router.put(
   "/orders/:id/status",
   async (req, res) => {
     try {
-      const { orderStatus } =
-        req.body;
+      const {
+        orderStatus,
+      } = req.body;
 
-      const updatedOrder =
-        await Order.findByIdAndUpdate(
-          req.params.id,
-          {
-            orderStatus,
-          },
-          {
-            new: true,
-          }
-        );
+      await db
+        .collection("orders")
+        .doc(
+          req.params.id
+        )
+        .update({
+          orderStatus,
+        });
 
-      res.json(updatedOrder);
+      res.json({
+        success: true,
+      });
     } catch (error) {
+      console.log(error);
+
       res.status(500).json({
         success: false,
       });

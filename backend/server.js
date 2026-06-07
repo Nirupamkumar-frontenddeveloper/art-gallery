@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const mongoose = require("mongoose");
 
 dotenv.config();
 
@@ -17,17 +16,6 @@ app.use(
   })
 );
 
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log(
-      "MongoDB Connected Successfully"
-    );
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-
 app.use("/api", paymentRoutes);
 
 app.get("/", (req, res) => {
@@ -35,6 +23,13 @@ app.get("/", (req, res) => {
     success: true,
     message:
       "ARTIONARY Backend Running",
+  });
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: "healthy",
   });
 });
 
