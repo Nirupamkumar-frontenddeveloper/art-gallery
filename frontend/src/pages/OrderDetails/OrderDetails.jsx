@@ -32,90 +32,167 @@ function OrderDetails() {
     );
   }
 
+  const statuses = [
+    "Order Placed",
+    "In Packing",
+    "Shipped",
+    "Out For Delivery",
+    "Delivered",
+  ];
+
+  const currentStep = statuses.indexOf(
+    order.orderStatus
+  );
+
   return (
     <div className="order-details-page">
 
       <div className="order-header">
+        <span>ORDER DETAILS</span>
+        <h1>{order.orderId}</h1>
 
-        <span>
-          ORDER DETAILS
-        </span>
-
-        <h1>
-          {order.orderId}
-        </h1>
-
+        <div className="order-date">
+          Ordered On{" "}
+          {new Date(
+            order.createdAt
+          ).toLocaleDateString()}
+        </div>
       </div>
 
       <div className="order-status-card">
 
-        <h2>
-          Current Status
-        </h2>
+        <div className="status-top">
+          <h2>Current Status</h2>
 
-        <div
-          className={`status-badge`}
-        >
-          {
-            order.orderStatus
-          }
+          <div className="status-badge">
+            {order.orderStatus}
+          </div>
+        </div>
+
+        <div className="tracking-line">
+
+          {statuses.map(
+            (status, index) => (
+              <div
+                key={status}
+                className={`track-step ${
+                  index <= currentStep
+                    ? "active"
+                    : ""
+                }`}
+              >
+                <div className="track-dot"></div>
+
+                <span>
+                  {status}
+                </span>
+              </div>
+            )
+          )}
+
         </div>
 
       </div>
 
-      <div className="customer-details">
+      <div className="info-grid">
 
-        <h2>
-          Customer Information
-        </h2>
+        <div className="customer-details card">
 
-        <p>
-          <strong>
-            Name:
-          </strong>
-          {" "}
-          {
-            order.customerName
-          }
-        </p>
+          <h2>
+            Customer Information
+          </h2>
 
-        <p>
-          <strong>
-            Phone:
-          </strong>
-          {" "}
-          {
-            order.phone
-          }
-        </p>
+          <div className="info-row">
+            <span>Name</span>
+            <strong>
+              {order.customerName}
+            </strong>
+          </div>
 
-        <p>
-          <strong>
-            Pincode:
-          </strong>
-          {" "}
-          {
-            order.pincode
-          }
-        </p>
+          <div className="info-row">
+            <span>Phone</span>
+            <strong>
+              {order.phone}
+            </strong>
+          </div>
 
-        <p>
-          <strong>
-            Address:
-          </strong>
-          {" "}
-          {
-            order.address
-          }
-        </p>
+          <div className="info-row">
+            <span>Pincode</span>
+            <strong>
+              {order.pincode}
+            </strong>
+          </div>
+
+          <div className="info-row">
+            <span>Address</span>
+            <strong>
+              {order.address}
+            </strong>
+          </div>
+
+        </div>
+
+        <div className="payment-info card">
+
+          <h2>
+            Payment Summary
+          </h2>
+
+          <div className="info-row">
+            <span>
+              Payment Status
+            </span>
+
+            <strong>
+              {
+                order.paymentStatus
+              }
+            </strong>
+          </div>
+
+          <div className="info-row">
+            <span>
+              Total Amount
+            </span>
+
+            <strong>
+              ₹
+              {
+                order.totalAmount
+              }
+            </strong>
+          </div>
+
+          <div className="info-row">
+            <span>
+              Payment ID
+            </span>
+
+            <strong className="payment-id">
+              {
+                order.razorpayPaymentId
+              }
+            </strong>
+          </div>
+
+        </div>
 
       </div>
 
-      <div className="order-products">
+      <div className="order-products card">
 
-        <h2>
-          Ordered Products
-        </h2>
+        <div className="section-title">
+          <h2>
+            Ordered Products
+          </h2>
+
+          <span>
+            {
+              order.items?.length
+            }{" "}
+            Item(s)
+          </span>
+        </div>
 
         {order.items?.map(
           (item) => (
@@ -135,79 +212,44 @@ function OrderDetails() {
                 }
               />
 
-              <div>
+              <div className="product-content">
 
                 <h3>
                   {item.title}
                 </h3>
 
-                <p>
-                  Quantity :
-                  {" "}
-                  {
-                    item.quantity
-                  }
-                </p>
+                <div className="product-meta">
 
-                <p>
-                  Price :
-                  ₹
-                  {
-                    item.price
-                  }
-                </p>
+                  <span>
+                    Qty :
+                    {" "}
+                    {
+                      item.quantity
+                    }
+                  </span>
 
-                <p>
-                  Total :
-                  ₹
-                  {item.price *
-                    item.quantity}
-                </p>
+                  <span>
+                    Price :
+                    ₹
+                    {
+                      item.price
+                    }
+                  </span>
+
+                  <span>
+                    Total :
+                    ₹
+                    {item.price *
+                      item.quantity}
+                  </span>
+
+                </div>
 
               </div>
 
             </div>
           )
         )}
-
-      </div>
-
-      <div className="payment-info">
-
-        <h2>
-          Payment Information
-        </h2>
-
-        <p>
-          <strong>
-            Payment Status:
-          </strong>
-          {" "}
-          {
-            order.paymentStatus
-          }
-        </p>
-
-        <p>
-          <strong>
-            Total Amount:
-          </strong>
-          {" "}
-          ₹
-          {
-            order.totalAmount
-          }
-        </p>
-
-        <p>
-          <strong>
-            Payment ID:
-          </strong>
-          {" "}
-          {
-            order.razorpayPaymentId
-          }
-        </p>
 
       </div>
 

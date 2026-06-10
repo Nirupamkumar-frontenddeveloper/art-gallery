@@ -6,34 +6,54 @@ import "./MyOrders.css";
 function MyOrders() {
   const [phone, setPhone] = useState("");
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const searchOrders = async () => {
+    if (!phone) {
+      alert("Please enter phone number");
+      return;
+    }
+
     try {
+      setLoading(true);
+
       const { data } = await axios.get(
         `https://artionary-backend.onrender.com/api/orders-by-phone/${phone}`
       );
 
-      setOrders(data);
+      const sortedOrders = [...data].sort(
+        (a, b) =>
+          new Date(b.createdAt) -
+          new Date(a.createdAt)
+      );
 
-      if (data.length === 0) {
+      setOrders(sortedOrders);
+
+      if (sortedOrders.length === 0) {
         alert("No Orders Found");
       }
     } catch (error) {
       console.log(error);
       alert("No Orders Found");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="my-orders-page">
-
       <div className="orders-header">
         <span>TRACK ORDERS</span>
+
         <h1>My Orders</h1>
+
+        <p className="orders-subtitle">
+          Track your artwork purchases and
+          view live order status
+        </p>
       </div>
 
       <div className="search-box">
-
         <input
           type="text"
           placeholder="Enter Phone Number"
@@ -43,60 +63,80 @@ function MyOrders() {
           }
         />
 
-        <button onClick={searchOrders}>
-          Find Orders
+        <button
+          onClick={searchOrders}
+          className="art-btn"
+          disabled={loading}
+        >
+          {loading
+            ? "Searching..."
+            : "Find Orders"}
         </button>
-
       </div>
 
-      <div className="orders-grid">
+      {orders.length > 0 && (
+        <div className="orders-count">
+          {orders.length} Order
+          {orders.length > 1 ? "s" : ""} Found
+        </div>
+      )}
 
+      <div className="orders-grid">
         {orders.map((order) => (
           <div
             className="order-card"
             key={order._id}
           >
+            <div className="order-card-header">
+              <div>
+                <h3>{order.orderId}</h3>
 
-            <div className="order-top">
+                <p className="order-date">
+                  {new Date(
+                    order.createdAt
+                  ).toLocaleDateString(
+                    "en-IN",
+                    {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    }
+                  )}
+                </p>
+              </div>
 
-              <h3>
-                {order.orderId}
-              </h3>
-
-              <span className="order-status">
+              <span className="status-badge">
                 {order.orderStatus}
               </span>
-
             </div>
 
-            <p>
-              Amount : ₹{order.totalAmount}
-            </p>
+            <div className="order-info">
+              <div className="info-item">
+                <span>Amount</span>
 
-            <p>
-              Payment : {order.paymentStatus}
-            </p>
+                <h4>
+                  ₹{order.totalAmount}
+                </h4>
+              </div>
 
-            <p>
-              Date :
-              {" "}
-              {new Date(
-                order.createdAt
-              ).toLocaleDateString()}
-            </p>
+              <div className="info-item">
+                <span>Payment</span>
+
+                <h4>
+                  {order.paymentStatus}
+                </h4>
+              </div>
+            </div>
 
             <Link
               to={`/order/${order._id}`}
-              className="art-btn"
+              className="view-order-btn"
             >
               View Order
             </Link>
-
           </div>
         ))}
-
       </div>
-
     </div>
   );
 }
