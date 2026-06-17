@@ -12,17 +12,39 @@ function Navbar() {
   const [menuOpen, setMenuOpen] =
     useState(false);
 
+  const handleProductsClick = () => {
+    setMenuOpen(false);
+
+    if (
+      window.location.pathname !==
+      "/"
+    ) {
+      window.location.href = "/";
+      return;
+    }
+
+    const section =
+      document.querySelector(
+        ".featured-section"
+      );
+
+    if (section) {
+      section.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
   return (
     <header className="navbar">
 
-      <div className="top-nav">
+      <div className="navbar-container">
 
         <button
           className="mobile-menu-btn"
           onClick={() =>
-            setMenuOpen(
-              !menuOpen
-            )
+            setMenuOpen(!menuOpen)
           }
         >
           {menuOpen ? (
@@ -32,23 +54,60 @@ function Navbar() {
           )}
         </button>
 
-        <div className="brand-section">
+        <Link
+          to="/"
+          className="brand-link"
+        >
+          <div className="brand">
+
+            <h1>Artionary</h1>
+
+            <span className="brand-tagline">
+              HANDCRAFTED • PERSONALIZED • PREMIUM
+            </span>
+
+          </div>
+        </Link>
+
+        <nav className="desktop-menu">
 
           <Link
             to="/"
-            className="brand-link"
             onClick={() =>
-              setMenuOpen(
-                false
-              )
+              setMenuOpen(false)
             }
           >
-            <h1>
-              ARTIONARY
-            </h1>
+            Home
           </Link>
 
-        </div>
+          <button
+            className="nav-btn"
+            onClick={
+              handleProductsClick
+            }
+          >
+            Products
+          </button>
+
+          <Link
+            to="/about"
+            onClick={() =>
+              setMenuOpen(false)
+            }
+          >
+            About
+          </Link>
+
+          <Link
+            to="/my-orders"
+            onClick={() =>
+              setMenuOpen(false)
+            }
+          >
+            Orders
+          </Link>
+
+        </nav>
 
         <div className="desktop-icons">
 
@@ -57,11 +116,6 @@ function Navbar() {
           <Link
             to="/cart"
             className="cart-icon"
-            onClick={() =>
-              setMenuOpen(
-                false
-              )
-            }
           >
             <FaShoppingBag />
           </Link>
@@ -75,11 +129,6 @@ function Navbar() {
           <Link
             to="/cart"
             className="cart-icon"
-            onClick={() =>
-              setMenuOpen(
-                false
-              )
-            }
           >
             <FaShoppingBag />
           </Link>
@@ -89,7 +138,7 @@ function Navbar() {
       </div>
 
       <nav
-        className={`menu-links ${
+        className={`mobile-menu ${
           menuOpen
             ? "active"
             : ""
@@ -99,31 +148,25 @@ function Navbar() {
         <Link
           to="/"
           onClick={() =>
-            setMenuOpen(
-              false
-            )
+            setMenuOpen(false)
           }
         >
           Home
         </Link>
 
-        <Link
-          to="/paintings"
-          onClick={() =>
-            setMenuOpen(
-              false
-            )
+        <button
+          className="mobile-nav-btn"
+          onClick={
+            handleProductsClick
           }
         >
-          Paintings
-        </Link>
+          Products
+        </button>
 
         <Link
           to="/about"
           onClick={() =>
-            setMenuOpen(
-              false
-            )
+            setMenuOpen(false)
           }
         >
           About
@@ -132,9 +175,7 @@ function Navbar() {
         <Link
           to="/my-orders"
           onClick={() =>
-            setMenuOpen(
-              false
-            )
+            setMenuOpen(false)
           }
         >
           Orders
