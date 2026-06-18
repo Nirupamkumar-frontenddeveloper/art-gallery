@@ -1,201 +1,201 @@
 export const products = [
-  // PORTRAIT
+  // BOOKMARKS
 
   {
-    id: "bs-portrait-001",
+    id: "bs-bookmark-001",
     bestSeller: true,
-    category: "portrait",
-    title: "Custom Portrait",
-    price: 999,
+    category: "bookmarks",
+    title: "Floral Bookmark",
+    price: 199,
     image:
-      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=1200",
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717653/Book_marks_vxvxc8.jpg",
     description:
-      "Premium handcrafted portrait artwork."
+      "Elegant handcrafted floral bookmark."
   },
 
   {
-    id: "bs-portrait-002",
+    id: "bs-bookmark-002",
+    bestSeller: false,
+    category: "bookmarks",
+    title: "Vintage Bookmark",
+    price: 249,
+    image:
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1200",
+    description:
+      "Vintage themed bookmark design."
+  },
+
+  {
+    id: "bs-bookmark-003",
+    bestSeller: false,
+    category: "bookmarks",
+    title: "Minimal Bookmark",
+    price: 299,
+    image:
+      "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1200",
+    description:
+      "Minimal and aesthetic bookmark."
+  },
+
+  {
+    id: "bs-bookmark-004",
+    bestSeller: false,
+    category: "bookmarks",
+    title: "Artistic Bookmark",
+    price: 349,
+    image:
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1200",
+    description:
+      "Premium artistic bookmark collection."
+  },
+
+  // PLANNERS
+
+  {
+    id: "bs-planner-001",
     bestSeller: true,
-    category: "portrait",
-    title: "Royal Portrait",
-    price: 1499,
+    category: "planners",
+    title: "Daily Planner",
+    price: 499,
     image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1200",
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717651/planner_qkgtr8.jpg",
     description:
-      "Luxury royal portrait painting."
+      "Stay productive every day."
   },
 
   {
-    id: "bs-portrait-003",
+    id: "bs-planner-002",
     bestSeller: false,
-    category: "portrait",
-    title: "Modern Portrait",
-    price: 1799,
+    category: "planners",
+    title: "Weekly Planner",
+    price: 599,
     image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=1200",
+      "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=1200",
     description:
-      "Modern artistic portrait artwork."
+      "Organize your week efficiently."
   },
 
   {
-    id: "bs-portrait-004",
+    id: "bs-planner-003",
     bestSeller: false,
-    category: "portrait",
-    title: "Family Portrait",
-    price: 2199,
+    category: "planners",
+    title: "Goal Planner",
+    price: 699,
     image:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=1200",
+      "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200",
     description:
-      "Beautiful family portrait painting."
+      "Track goals and achievements."
   },
 
-  // COUPLE
+  {
+    id: "bs-planner-004",
+    bestSeller: false,
+    category: "planners",
+    title: "Premium Planner",
+    price: 799,
+    image:
+      "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1200",
+    description:
+      "Luxury planner for professionals."
+  },
+
+  // JOURNALS
 
   {
-    id: "bs-couple-001",
+    id: "bs-journal-001",
     bestSeller: true,
-    category: "couple",
-    title: "Couple Painting",
-    price: 1499,
+    category: "journals",
+    title: "Creative Journal",
+    price: 599,
     image:
-      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=1200",
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717650/journal2_zpzrxc.jpg",
     description:
-      "Beautiful couple artwork."
+      "Express your creativity daily."
   },
 
   {
-    id: "bs-couple-002",
+    id: "bs-journal-002",
+    bestSeller: false,
+    category: "journals",
+    title: "Travel Journal",
+    price: 699,
+    image:
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1200",
+    description:
+      "Capture your travel memories."
+  },
+
+  {
+    id: "bs-journal-003",
+    bestSeller: false,
+    category: "journals",
+    title: "Mindfulness Journal",
+    price: 749,
+    image:
+      "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200",
+    description:
+      "Journal for reflection and growth."
+  },
+
+  {
+    id: "bs-journal-004",
+    bestSeller: false,
+    category: "journals",
+    title: "Premium Journal",
+    price: 899,
+    image:
+      "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1200",
+    description:
+      "Premium handcrafted journal."
+  },
+
+  // NOTEPAD
+
+  {
+    id: "bs-notepad-001",
     bestSeller: true,
-    category: "couple",
-    title: "Romantic Couple",
-    price: 1999,
+    category: "notepad",
+    title: "Classic Notepad",
+    price: 299,
     image:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1200",
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717652/Notepad_2_b82dme.jpg",
     description:
-      "Romantic couple portrait artwork."
+      "Simple and elegant notepad."
   },
 
   {
-    id: "bs-couple-003",
+    id: "bs-notepad-002",
     bestSeller: false,
-    category: "couple",
-    title: "Forever Together",
-    price: 2299,
+    category: "notepad",
+    title: "Office Notepad",
+    price: 349,
     image:
-      "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=1200",
+      "https://images.unsplash.com/photo-1531346680769-a1d79b57de5c?w=1200",
     description:
-      "Celebrate your love forever."
+      "Perfect for office notes."
   },
 
   {
-    id: "bs-couple-004",
+    id: "bs-notepad-003",
     bestSeller: false,
-    category: "couple",
-    title: "Wedding Couple",
-    price: 2799,
+    category: "notepad",
+    title: "Designer Notepad",
+    price: 399,
     image:
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1200",
+      "https://images.unsplash.com/photo-1517842645767-c639042777db?w=1200",
     description:
-      "Premium wedding couple painting."
-  },
-
-  // PET
-
-  {
-    id: "bs-pet-001",
-    bestSeller: true,
-    category: "pet",
-    title: "Pet Portrait",
-    price: 1299,
-    image:
-      "https://images.unsplash.com/photo-1578301978018-3005759f48f7?w=1200",
-    description:
-      "Turn your pet into timeless art."
+      "Designer notepad collection."
   },
 
   {
-    id: "bs-pet-002",
-    bestSeller: true,
-    category: "pet",
-    title: "Dog Portrait",
-    price: 1599,
-    image:
-      "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=1200",
-    description:
-      "Premium dog portrait painting."
-  },
-
-  {
-    id: "bs-pet-003",
+    id: "bs-notepad-004",
     bestSeller: false,
-    category: "pet",
-    title: "Cat Portrait",
-    price: 1499,
+    category: "notepad",
+    title: "Premium Notepad",
+    price: 499,
     image:
-      "https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=1200",
+      "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1200",
     description:
-      "Custom cat portrait artwork."
-  },
-
-  {
-    id: "bs-pet-004",
-    bestSeller: false,
-    category: "pet",
-    title: "Luxury Pet Art",
-    price: 1999,
-    image:
-      "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=1200",
-    description:
-      "Luxury handcrafted pet artwork."
-  },
-
-  // WEDDING
-
-  {
-    id: "bs-wedding-001",
-    bestSeller: true,
-    category: "wedding",
-    title: "Wedding Art",
-    price: 2499,
-    image:
-      "https://images.unsplash.com/photo-1577083165633-14ebcdb0f658?w=1200",
-    description:
-      "Capture your wedding forever."
-  },
-
-  {
-    id: "bs-wedding-002",
-    bestSeller: true,
-    category: "wedding",
-    title: "Wedding Memories",
-    price: 2999,
-    image:
-      "https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=1200",
-    description:
-      "Preserve your wedding memories."
-  },
-
-  {
-    id: "bs-wedding-003",
-    bestSeller: false,
-    category: "wedding",
-    title: "Bride & Groom Art",
-    price: 3299,
-    image:
-      "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200",
-    description:
-      "Beautiful bride and groom artwork."
-  },
-
-  {
-    id: "bs-wedding-004",
-    bestSeller: false,
-    category: "wedding",
-    title: "Royal Wedding",
-    price: 3999,
-    image:
-      "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=1200",
-    description:
-      "Luxury royal wedding painting."
+      "Luxury premium notepad."
   }
 ];

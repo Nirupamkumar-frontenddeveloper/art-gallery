@@ -2,8 +2,8 @@
 
 .navbar {
   width: 100%;
-  background: #f8f6f3;
-  border-bottom: 1px solid #e6e0d7;
+  background: #ffffff;
+  border-bottom: 1px solid #e8e3dc;
   position: sticky;
   top: 0;
   z-index: 999;
@@ -11,13 +11,15 @@
 
 .navbar-container {
   max-width: 1600px;
-  margin: auto;
+  margin: 0 auto;
   height: 95px;
   padding: 0 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
+/* BRAND */
 
 .brand-link {
   text-decoration: none;
@@ -26,6 +28,7 @@
 .brand {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .brand h1 {
@@ -34,22 +37,24 @@
   font-size: 58px;
   font-weight: 400;
   letter-spacing: 8px;
-  color: black;
-  line-height: 1;
+  color: #617564;
+  line-height: 0.95;
 }
 
 .brand-tagline {
-  margin-top: 4px;
+  margin-top: 6px;
   font-size: 10px;
   letter-spacing: 3px;
-  color: goldenrod;
+  color: #c19434;
   font-weight: 600;
 }
+
+/* DESKTOP MENU */
 
 .desktop-menu {
   display: flex;
   align-items: center;
-  gap: 45px;
+  gap: 50px;
 }
 
 .desktop-menu a,
@@ -71,7 +76,7 @@
   position: absolute;
   left: 0;
   bottom: -8px;
-  width: 0;
+  width: 0%;
   height: 1px;
   background: #b08d57;
   transition: 0.3s;
@@ -87,29 +92,53 @@
   width: 100%;
 }
 
-.desktop-icons {
+/* ICONS */
+
+.desktop-icons,
+.mobile-icons {
   display: flex;
   align-items: center;
-  gap: 24px;
-  font-size: 22px;
+  gap: 22px;
   color: #444;
 }
 
-.desktop-icons svg {
+.desktop-icons svg,
+.mobile-icons svg {
+  font-size: 21px;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.desktop-icons svg:hover {
+.desktop-icons svg:hover,
+.mobile-icons svg:hover {
   color: #b08d57;
 }
 
 .cart-icon {
   color: inherit;
   text-decoration: none;
+  position: relative;
   display: flex;
   align-items: center;
 }
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #b08d57;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* MOBILE */
 
 .mobile-menu-btn,
 .mobile-icons {
@@ -120,16 +149,11 @@
   display: none;
 }
 
-/* MOBILE */
-
 @media (max-width: 900px) {
 
   .navbar-container {
-    height: 72px;
+    height: 70px;
     padding: 0 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     position: relative;
   }
 
@@ -142,47 +166,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 26px;
     border: none;
     background: transparent;
     color: #555;
     font-size: 22px;
     cursor: pointer;
     padding: 0;
-    z-index: 10;
-    width: 24px;
-  }
-
-  .brand {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .brand h1 {
-    font-family: "Forum", serif;
-    font-size: 22px;
-    font-weight: 400;
-    letter-spacing: 4px;
-    color: #617564;
-    margin: 0;
-    line-height: 1;
-    white-space: nowrap;
-  }
-
-  .brand-tagline {
-    display: block;
-    margin-top: 2px;
-    font-size: 6px;
-    letter-spacing: 1.6px;
-    color: #1f1f1f;
-    font-weight: 600;
-    line-height: 1;
-    white-space: nowrap;
+    z-index: 100;
   }
 
   .mobile-icons {
@@ -191,13 +182,40 @@
     gap: 14px;
     color: #555;
     font-size: 18px;
-    z-index: 10;
+    z-index: 100;
+  }
+
+  .brand {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    align-items: center;
+  }
+
+  .brand h1 {
+    font-family: "Forum", serif;
+    font-size: 24px;
+    letter-spacing: 3px;
+    color: #617564;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .brand-tagline {
+    margin-top: 3px;
+    font-size: 6px;
+    letter-spacing: 1.8px;
+    color: #1f1f1f;
+    font-weight: 600;
+    white-space: nowrap;
+    line-height: 1;
   }
 
   .mobile-menu {
     display: flex;
     flex-direction: column;
-    background: #f8f6f3;
+    background: #ffffff;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.35s ease;
@@ -212,12 +230,12 @@
   .mobile-nav-btn {
     width: 100%;
     padding: 16px 20px;
-    text-decoration: none;
-    color: #555;
     background: transparent;
     border: none;
     border-bottom: 1px solid #ece7df;
     text-align: left;
+    text-decoration: none;
+    color: #555;
     font-size: 16px;
     cursor: pointer;
   }
@@ -225,5 +243,13 @@
   .mobile-menu a:hover,
   .mobile-nav-btn:hover {
     color: #b08d57;
+  }
+
+  .cart-count {
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+    top: -6px;
+    right: -8px;
   }
 }

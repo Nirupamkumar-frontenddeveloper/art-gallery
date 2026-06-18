@@ -13,13 +13,15 @@ export const CartProvider = ({
     useState([]);
 
   const addToCart = (product) => {
-    const existing = cartItems.find(
-      (item) => item.id === product.id
-    );
+    setCartItems((prevItems) => {
+      const existing =
+        prevItems.find(
+          (item) =>
+            item.id === product.id
+        );
 
-    if (existing) {
-      setCartItems(
-        cartItems.map((item) =>
+      if (existing) {
+        return prevItems.map((item) =>
           item.id === product.id
             ? {
                 ...item,
@@ -27,30 +29,30 @@ export const CartProvider = ({
                   item.quantity + 1,
               }
             : item
-        )
-      );
-    } else {
-      setCartItems([
-        ...cartItems,
+        );
+      }
+
+      return [
+        ...prevItems,
         {
           ...product,
           quantity: 1,
         },
-      ]);
-    }
+      ];
+    });
   };
 
   const removeFromCart = (id) => {
-    setCartItems(
-      cartItems.filter(
+    setCartItems((prevItems) =>
+      prevItems.filter(
         (item) => item.id !== id
       )
     );
   };
 
   const increaseQty = (id) => {
-    setCartItems(
-      cartItems.map((item) =>
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
         item.id === id
           ? {
               ...item,
@@ -63,8 +65,8 @@ export const CartProvider = ({
   };
 
   const decreaseQty = (id) => {
-    setCartItems(
-      cartItems.map((item) =>
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
         item.id === id
           ? {
               ...item,
@@ -88,10 +90,17 @@ export const CartProvider = ({
     );
   };
 
+  const cartCount = cartItems.reduce(
+    (total, item) =>
+      total + item.quantity,
+    0
+  );
+
   return (
     <CartContext.Provider
       value={{
         cartItems,
+        cartCount,
         addToCart,
         removeFromCart,
         increaseQty,

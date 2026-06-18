@@ -6,20 +6,22 @@ import {
   FaSearch,
   FaShoppingBag,
 } from "react-icons/fa";
+import { useCart } from "../../context/CartContext";
 import "./Navbar.css";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] =
     useState(false);
 
+  const { cartCount } = useCart();
+
   const handleProductsClick = () => {
     setMenuOpen(false);
 
     if (
-      window.location.pathname !==
-      "/"
+      window.location.pathname !== "/"
     ) {
-      window.location.href = "/";
+      window.location.href = "/#products";
       return;
     }
 
@@ -38,7 +40,6 @@ function Navbar() {
 
   return (
     <header className="navbar">
-
       <div className="navbar-container">
 
         <button
@@ -89,14 +90,8 @@ function Navbar() {
             Products
           </button>
 
-          <Link
-            to="/about"
-            onClick={() =>
-              setMenuOpen(false)
-            }
-          >
-            About
-          </Link>
+          
+          
 
           <Link
             to="/my-orders"
@@ -118,6 +113,12 @@ function Navbar() {
             className="cart-icon"
           >
             <FaShoppingBag />
+
+            {cartCount > 0 && (
+              <span className="cart-count">
+                {cartCount}
+              </span>
+            )}
           </Link>
 
         </div>
@@ -131,6 +132,12 @@ function Navbar() {
             className="cart-icon"
           >
             <FaShoppingBag />
+
+            {cartCount > 0 && (
+              <span className="cart-count">
+                {cartCount}
+              </span>
+            )}
           </Link>
 
         </div>
@@ -182,7 +189,6 @@ function Navbar() {
         </Link>
 
       </nav>
-
     </header>
   );
 }

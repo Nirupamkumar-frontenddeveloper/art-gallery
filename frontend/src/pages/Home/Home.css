@@ -1,6 +1,6 @@
 .hero {
   min-height: auto;
-  background: #f8f6f3;
+  background: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -229,7 +229,7 @@
 }
 .why-section {
   padding: 100px 80px;
-  background: #f8f6f3;
+  background: white;
 }
 
 .why-heading {
@@ -379,7 +379,7 @@
 
 .testimonial-section {
   padding: 100px 80px;
-  background: #f8f6f3;
+  background: white;
 }
 
 .testimonial-heading {
