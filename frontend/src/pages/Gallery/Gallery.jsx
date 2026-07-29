@@ -21,7 +21,7 @@ function Gallery() {
         <span>ARTIONARY COLLECTION</span>
 
         <h1>
-          {categoryTitle} Paintings
+          {categoryTitle}
         </h1>
 
         <p>

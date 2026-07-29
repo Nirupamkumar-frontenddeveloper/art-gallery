@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { products } from "../../data/products";
 import { useCart } from "../../context/CartContext";
@@ -6,15 +7,11 @@ import "./ProductDetails.css";
 function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [showImage, setShowImage] = useState(false);
 
-  const {
-    addToCart,
-    isInCart
-  } = useCart();
+  const { addToCart, isInCart } = useCart();
 
-  const product = products.find(
-    (item) => item.id === id
-  );
+  const product = products.find((item) => item.id === id);
 
   if (!product) {
     return (
@@ -33,6 +30,12 @@ function ProductDetails() {
     });
   };
 
+  const handleImageClick = () => {
+    if (window.innerWidth > 768) {
+      setShowImage(true);
+    }
+  };
+
   return (
     <div className="product-details-page">
 
@@ -42,6 +45,7 @@ function ProductDetails() {
           <img
             src={product.image}
             alt={product.title}
+            onClick={handleImageClick}
           />
         </div>
 
@@ -62,6 +66,7 @@ function ProductDetails() {
           </p>
 
           <div className="product-features">
+
             <div className="feature">
               ✓ Premium Quality Materials
             </div>
@@ -81,6 +86,7 @@ function ProductDetails() {
             <div className="feature">
               ✓ Fast Delivery
             </div>
+
           </div>
 
           <div className="product-buttons">
@@ -125,9 +131,8 @@ function ProductDetails() {
           </div>
 
           <p>
-            Amazing quality artwork. The final
-            painting looked even better than
-            expected.
+            Amazing quality artwork. The final painting looked even
+            better than expected.
           </p>
         </div>
 
@@ -138,8 +143,8 @@ function ProductDetails() {
           </div>
 
           <p>
-            Beautiful painting and very premium
-            packaging. Worth every rupee.
+            Beautiful painting and very premium packaging.
+            Worth every rupee.
           </p>
         </div>
 
@@ -158,6 +163,28 @@ function ProductDetails() {
         </div>
 
       </div>
+
+      {/* Full Screen Image Preview (Desktop Only) */}
+
+      {showImage && (
+        <div
+          className="image-modal"
+          onClick={() => setShowImage(false)}
+        >
+          <img
+            src={product.image}
+            alt={product.title}
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          <button
+            className="close-image"
+            onClick={() => setShowImage(false)}
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
     </div>
   );

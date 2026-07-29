@@ -198,4 +198,149 @@ export const products = [
     description:
       "Luxury premium notepad."
   }
+  ,
+
+  // PAINTINGS
+
+  {
+    id: "bs-painting-001",
+    bestSeller: false,
+    category: "paintings",
+    title: "Sunset Portrait",
+    price: 3500,
+    image:
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785337299/SKM_C55826071122421_gzs3b1.jpg",
+    description:
+      "Vibrant sunset portrait on canvas."
+  },
+
+  {
+    id: "bs-painting-002",
+    bestSeller: false,
+    category: "paintings",
+    title: "Abstract Waves",
+    price: 2500,
+    image:
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785337298/SKM_C55826071122430_qagt5t.jpg",
+    description:
+      "Contemporary abstract painting inspired by ocean waves."
+  },
+
+  {
+    id: "bs-painting-003",
+    bestSeller: false,
+    category: "paintings",
+    title: "Floral Still Life",
+    price: 1800,
+    image:
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785337298/SKM_C55826071122440_ze3glf.jpg",
+    description:
+      "Delicate floral still life with rich textures."
+  },
+
+  {
+    id: "bs-painting-004",
+    bestSeller: false,
+    category: "paintings",
+    title: "Mountain Silence",
+    price: 4200,
+    image:
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785337297/SKM_C55826071122431_c8fhcf.jpg",
+    description:
+      "Large-format landscape capturing mountain serenity."
+  }
+  ,
+
+  // POSTERS
+
+  {
+    id: "bs-poster-001",
+    bestSeller: false,
+    category: "posters",
+    title: "Vintage Film Poster",
+    price: 499,
+    image:
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785341569/WhatsApp_Image_2026-07-29_at_8.36.57_PM_sjgecn.jpg",
+    description:
+      "Classic vintage film style poster print."
+  },
+
+  {
+    id: "bs-poster-002",
+    bestSeller: false,
+    category: "posters",
+    title: "Minimal Typographic Poster",
+    price: 399,
+    image:
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785341172/WhatsApp_Image_2026-07-29_at_8.36.54_PM_qlot6g.jpg",
+    description:
+      "Clean typographic poster for modern interiors."
+  },
+
+  {
+    id: "bs-poster-003",
+    bestSeller: false,
+    category: "posters",
+    title: "Botanical Print Poster",
+    price: 599,
+    image:
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785341564/WhatsApp_Image_2026-07-29_at_8.36.56_PM_2_io9yxf.jpg",
+    description:
+      "High-quality botanical illustration poster."
+  },
+  {
+    id: "bs-poster-004",
+    bestSeller: false,
+    category: "posters",
+    title: "Botanical Print Poster",
+    price: 599,
+    image:
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785341564/WhatsApp_Image_2026-07-29_at_8.36.56_PM_1_aimwab.jpg",
+    description:
+      "High-quality botanical illustration poster."
+  },
+  {
+    id: "bs-poster-005",
+    bestSeller: false,
+    category: "posters",
+    title: "Botanical Print Poster",
+    price: 599,
+    image:
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785341563/SKM_C55826071122450_ohy0s6.jpg",
+    description:
+      "High-quality botanical illustration poster."
+  },
+  {
+    id: "bs-poster-006",
+    bestSeller: false,
+    category: "posters",
+    title: "Botanical Print Poster",
+    price: 599,
+    image:
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785341563/WhatsApp_Image_2026-07-29_at_8.36.55_PM_eghset.jpg",
+    description:
+      "High-quality botanical illustration poster."
+  },
+  {
+    id: "bs-poster-007",
+    bestSeller: false,
+    category: "posters",
+    title: "Botanical Print Poster",
+    price: 599,
+    image:
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785341562/WhatsApp_Image_2026-07-29_at_8.36.56_PM_beuh5z.jpg",
+    description:
+      "High-quality botanical illustration poster."
+  },
+  {
+    id: "bs-poster-008",
+    bestSeller: false,
+    category: "posters",
+    title: "Botanical Print Poster",
+    price: 599,
+    image:
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785341562/WhatsApp_Image_2026-07-29_at_8.36.55_PM_1_cx6slf.jpg",
+    description:
+      "High-quality botanical illustration poster."
+  }
 ];

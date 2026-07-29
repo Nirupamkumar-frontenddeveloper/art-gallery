@@ -54,7 +54,7 @@ function Home() {
 
           <Link
             to="/paintings/bookmarks"
-            className="featured-card large"
+            className="featured-card standard"
           >
             <img
               src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717653/Book_marks_vxvxc8.jpg"
@@ -124,6 +124,46 @@ function Home() {
             <div className="featured-overlay">
               <div>
                 <h3>Notepad</h3>
+
+                <span className="art-btn collection-btn">
+                  Explore Collection →
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <Link
+            to="/paintings/paintings"
+            className="featured-card"
+          >
+            <img
+  src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1785337298/SKM_C55826071122440_ze3glf.jpg"
+  alt="Paintings"
+/>
+
+            <div className="featured-overlay">
+              <div>
+                <h3>Paintings</h3>
+
+                <span className="art-btn collection-btn">
+                  Explore Collection →
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <Link
+            to="/paintings/posters"
+            className="featured-card"
+          >
+            <img
+              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1785341569/WhatsApp_Image_2026-07-29_at_8.36.57_PM_sjgecn.jpg"
+              alt="Posters"
+            />
+
+            <div className="featured-overlay">
+              <div>
+                <h3>Posters</h3>
 
                 <span className="art-btn collection-btn">
                   Explore Collection →
