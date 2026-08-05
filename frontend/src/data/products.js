@@ -233,7 +233,7 @@ const baseProducts = [
     bestSeller: false,
     category: "paintings",
     title: "Floral Paisley Indian Print",
-    price: 800,
+    price: 1899,
     image:
       "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785337298/SKM_C55826071122430_qagt5t.jpg",
    description:
@@ -253,7 +253,7 @@ features: [
     bestSeller: false,
     category: "paintings",
     title: "Madhubani painting",
-    price: 1899,
+    price: 799,
     image:
       "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785337298/SKM_C55826071122440_ze3glf.jpg",
     description:
@@ -273,7 +273,7 @@ features: [
     bestSeller: false,
     category: "paintings",
     title: "Kalamkari Painting",
-    price: 1899,
+    price: 799,
     image:
       "https://res.cloudinary.com/dcbvuidqn/image/upload/v1785337297/SKM_C55826071122431_c8fhcf.jpg",
     description:
