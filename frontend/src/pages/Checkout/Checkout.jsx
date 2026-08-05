@@ -15,6 +15,8 @@ function Checkout() {
     address: "",
     pincode: "",
   });
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [status, setStatus] = useState("");
 
   const handleChange = (e) => {
     setFormData({
@@ -43,9 +45,12 @@ function Checkout() {
       !formData.address ||
       !formData.pincode
     ) {
-      alert("Please fill all fields");
+      setStatus("Please fill all fields");
       return;
     }
+
+    setStatus("");
+    setIsProcessing(true);
 
     try {
       const { data } = await axios.post(
@@ -154,31 +159,21 @@ function Checkout() {
                 }
               );
 
-            if (
-              verify.data.success
-            ) {
-              alert(
-                "Payment Successful"
-              );
-
-              navigate(
-                "/my-orders"
-              );
+            if (verify.data.success) {
+              setStatus("Payment Successful");
+              navigate("/my-orders");
             }
           } catch (error) {
             console.log(error);
-
-            alert(
-              "Payment Verification Failed"
-            );
+            setStatus("Payment Verification Failed");
+            setIsProcessing(false);
           }
         },
 
         modal: {
           ondismiss: () => {
-            alert(
-              "Payment Cancelled"
-            );
+            setStatus("Payment Cancelled");
+            setIsProcessing(false);
           },
         },
       };
@@ -188,19 +183,16 @@ function Checkout() {
           options
         );
 
-      razorpay.on(
-        "payment.failed",
-        () => {
-          alert(
-            "Payment Failed"
-          );
-        }
-      );
+      razorpay.on("payment.failed", () => {
+        setStatus("Payment Failed");
+        setIsProcessing(false);
+      });
 
       razorpay.open();
     } catch (error) {
       console.log(error);
-      alert("Payment Failed");
+      setStatus("Payment Failed");
+      setIsProcessing(false);
     }
   };
 
@@ -353,14 +345,18 @@ function Checkout() {
             }
           />
 
+          {status && (
+            <div className="checkout-status">
+              {status}
+            </div>
+          )}
+
           <button
             className="checkout-btn"
-            onClick={
-              handlePayment
-            }
+            onClick={handlePayment}
+            disabled={isProcessing}
           >
-            Pay ₹
-            {totalAmount}
+            {isProcessing ? `Processing...` : `Pay ₹${totalAmount}`}
           </button>
 
         </div>

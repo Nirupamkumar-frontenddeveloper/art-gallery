@@ -19,6 +19,8 @@ function AdminOrders() {
       ) === "true"
     );
 
+  const [adminMessage, setAdminMessage] = useState("");
+
   const [selectedMonth, setSelectedMonth] =
     useState("all");
 
@@ -71,9 +73,7 @@ function AdminOrders() {
   } catch (error) {
     console.log(error);
     setOrders(previousOrders);
-    alert(
-      "Failed to update status"
-    );
+    setAdminMessage("Failed to update status");
   }
 };
 
@@ -160,14 +160,15 @@ function AdminOrders() {
                   true
                 );
               } else {
-                alert(
-                  "Wrong Password"
-                );
+                setAdminMessage("Wrong Password");
               }
             }}
           >
             Login
           </button>
+          {adminMessage && (
+            <p className="admin-message">{adminMessage}</p>
+          )}
         </div>
       </div>
     );
@@ -229,6 +230,10 @@ function AdminOrders() {
         <h1>
           Manage Orders
         </h1>
+
+        {adminMessage && (
+          <div className="admin-message-inline">{adminMessage}</div>
+        )}
 
         <button
           className="logout-btn"

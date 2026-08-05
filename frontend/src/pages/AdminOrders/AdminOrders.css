@@ -172,6 +172,20 @@
   transform: translateY(0) scale(0.97);
 }
 
+.admin-message {
+  color: #ef4444;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.admin-message-inline {
+  position: absolute;
+  right: 18px;
+  top: 48px;
+  color: #ef4444;
+  font-weight: 600;
+}
+
 /* ===== Stats + Filters row ===== */
 .crm-stats {
   display: grid;

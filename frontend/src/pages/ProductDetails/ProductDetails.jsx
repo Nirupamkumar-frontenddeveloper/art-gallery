@@ -66,27 +66,12 @@ function ProductDetails() {
           </p>
 
           <div className="product-features">
-
-            <div className="feature">
-              ✓ Premium Quality Materials
-            </div>
-
-            <div className="feature">
-              ✓ Handcrafted Artwork
-            </div>
-
-            <div className="feature">
-              ✓ Custom Personalization
-            </div>
-
-            <div className="feature">
-              ✓ Secure Packaging
-            </div>
-
-            <div className="feature">
-              ✓ Fast Delivery
-            </div>
-
+            {product.features &&
+              product.features.map((feat, idx) => (
+                <div className="feature" key={idx}>
+                  ✓ {feat}
+                </div>
+              ))}
           </div>
 
           <div className="product-buttons">
@@ -148,7 +133,7 @@ function ProductDetails() {
           </p>
         </div>
 
-        <div className="write-review">
+        {/* <div className="write-review">
 
           <h3>Write A Review</h3>
 
@@ -160,7 +145,7 @@ function ProductDetails() {
             Submit Review
           </button>
 
-        </div>
+        </div> */}
 
       </div>
 

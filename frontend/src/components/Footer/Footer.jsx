@@ -13,27 +13,11 @@ function Footer() {
           </p>
         </div>
 
-        <div className="footer-links">
-          <h3>Quick Links</h3>
-
-          <a href="/">Home</a>
-          <a href="/paintings">Paintings</a>
-          <a href="/contact">Contact</a>
-        </div>
-
-        <div className="footer-links">
-          <h3>Support</h3>
-
-          <a href="/">FAQ</a>
-          <a href="/">Shipping Policy</a>
-          <a href="/">Privacy Policy</a>
-        </div>
-
         <div className="footer-contact">
           <h3>Contact</h3>
 
-          <p>support@artionary.com</p>
-          <p>+91 98765 43210</p>
+          <p>Artionary.support@gmail.com</p>
+          <p>+91 8796523785</p>
           <p>India</p>
         </div>
 

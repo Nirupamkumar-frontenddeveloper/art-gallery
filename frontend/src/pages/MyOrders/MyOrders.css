@@ -89,6 +89,13 @@
   font-weight: 500;
 }
 
+.search-status {
+  text-align: center;
+  color: #b08d57;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
 .orders-grid {
   display: grid;
   grid-template-columns: repeat(

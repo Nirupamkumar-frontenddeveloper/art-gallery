@@ -7,10 +7,11 @@ function MyOrders() {
   const [phone, setPhone] = useState("");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchStatus, setSearchStatus] = useState("");
 
   const searchOrders = async () => {
     if (!phone) {
-      alert("Please enter phone number");
+      setSearchStatus("Please enter phone number");
       return;
     }
 
@@ -30,11 +31,13 @@ function MyOrders() {
       setOrders(sortedOrders);
 
       if (sortedOrders.length === 0) {
-        alert("No Orders Found");
+        setSearchStatus("No Orders Found");
+      } else {
+        setSearchStatus("");
       }
     } catch (error) {
       console.log(error);
-      alert("No Orders Found");
+      setSearchStatus("No Orders Found");
     } finally {
       setLoading(false);
     }
@@ -73,6 +76,12 @@ function MyOrders() {
             : "Find Orders"}
         </button>
       </div>
+
+      {searchStatus && (
+        <div className="search-status">
+          {searchStatus}
+        </div>
+      )}
 
       {orders.length > 0 && (
         <div className="orders-count">
