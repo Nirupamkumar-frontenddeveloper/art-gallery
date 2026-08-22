@@ -1,7 +1,7 @@
 import "./Home.css";
 import { Link } from "react-router-dom";
 import { products } from "../../data/products";
-
+import { FaWhatsapp } from "react-icons/fa";
 function Home() {
   const bestSellers = products.filter(
     (item) => item.bestSeller
@@ -9,6 +9,16 @@ function Home() {
 
   return (
     <>
+
+    <a
+  href="https://wa.me/917322859421?text=I%20want%20to%20buy"
+  className="whatsapp-button"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <FaWhatsapp className="whatsapp-icon" />
+  <span>PLACE YOUR ORDER NOW</span>
+</a>
       <section className="hero">
         <div className="hero-left">
           <h1>
