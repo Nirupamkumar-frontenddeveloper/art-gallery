@@ -5,55 +5,56 @@ const baseProducts = [
     id: "bs-bookmark-001",
     bestSeller: true,
     category: "bookmarks",
-    title: "Floral Bookmark",
-    price: 1,
+    title: "Printed Bookmarks",
+    price: 199,
     image:
-      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717653/Book_marks_vxvxc8.jpg",
+      "https://res.cloudinary.com/dcbvuidqn/image/upload/v1787686935/WhatsApp_Image_2026-08-26_at_1.10.49_AM_ehkjqf.jpg",
     description:
-      "Elegant handcrafted floral bookmark."
+      "Elegant handcrafted bookmark."
     ,
     features: [
-      "Laminated finish",
-      "Eco-friendly paper",
-      "Gift-ready packaging"
-    ]
+  "Premium laminated finish for long-lasting durability",
+  "Eco-friendly, high-quality paper",
+  "Set of 10 unique and fun bookmark designs",
+  "Gift-ready packaging"
+]
   },
 
-  {
-    id: "bs-bookmark-002",
-    bestSeller: false,
-    category: "bookmarks",
-    title: "Vintage Bookmark",
-    price: 1,
-    image:
-      "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1200",
-    description:
-      "Vintage themed bookmark design."
-  },
+  // {
+  //   id: "bs-bookmark-002",
+  //   bestSeller: false,
+  //   category: "bookmarks",
+  //   title: "Vintage Bookmark",
+  //   price: 200,
+  //   image:
+  //     "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1200",
+  //   description:
+  //     "Vintage themed bookmark design."
+  // },
 
-  {
-    id: "bs-bookmark-003",
-    bestSeller: false,
-    category: "bookmarks",
-    title: "Minimal Bookmark",
-    price: 1,
-    image:
-      "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1200",
-    description:
-      "Minimal and aesthetic bookmark."
-  },
+  // {
+  //   id: "bs-bookmark-003",
+  //   bestSeller: false,
+  //   category: "bookmarks",
+  //   title: "Minimal Bookmark",
+  //   price: 200,
+  //   image:
+  //     "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1200",
+  //   description:
+  //     "Minimal and aesthetic bookmark."
+  // },
 
-  {
-    id: "bs-bookmark-004",
-    bestSeller: false,
-    category: "bookmarks",
-    title: "Artistic Bookmark",
-    price: 1,
-    image:
-      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1200",
-    description:
-      "Premium artistic bookmark collection."
-  },
+  // {
+  //   id: "bs-bookmark-004",
+  //   bestSeller: false,
+  //   category: "bookmarks",
+  //   title: "Artistic Bookmark",
+  //   price: 200,
+  //   image:
+  //     "https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1200",
+  //   description:
+  //     "Premium artistic bookmark collection."
+  // },
 
   // PLANNERS
 
@@ -62,7 +63,7 @@ const baseProducts = [
     bestSeller: true,
     category: "planners",
     title: "Daily Planner",
-    price: 1,
+    price: 200,
     image:
       "https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717651/planner_qkgtr8.jpg",
     description:
@@ -74,7 +75,7 @@ const baseProducts = [
     bestSeller: false,
     category: "planners",
     title: "Weekly Planner",
-    price: 1,
+    price: 200,
     image:
       "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=1200",
     description:
@@ -86,7 +87,7 @@ const baseProducts = [
     bestSeller: false,
     category: "planners",
     title: "Goal Planner",
-    price: 1,
+    price: 200,
     image:
       "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200",
     description:
@@ -98,7 +99,7 @@ const baseProducts = [
     bestSeller: false,
     category: "planners",
     title: "Premium Planner",
-    price: 1,
+    price: 200,
     image:
       "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1200",
     description:
@@ -112,7 +113,7 @@ const baseProducts = [
     bestSeller: true,
     category: "journals",
     title: "Creative Journal",
-    price: 1,
+    price: 200,
     image:
       "https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717650/journal2_zpzrxc.jpg",
     description:
@@ -124,7 +125,7 @@ const baseProducts = [
     bestSeller: false,
     category: "journals",
     title: "Travel Journal",
-    price: 1,
+    price: 200,
     image:
       "https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1200",
     description:
@@ -136,7 +137,7 @@ const baseProducts = [
     bestSeller: false,
     category: "journals",
     title: "Mindfulness Journal",
-    price: 1,
+    price: 200,
     image:
       "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200",
     description:
@@ -148,7 +149,7 @@ const baseProducts = [
     bestSeller: false,
     category: "journals",
     title: "Premium Journal",
-    price: 1,
+    price: 200,
     image:
       "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1200",
     description:
@@ -162,7 +163,7 @@ const baseProducts = [
     bestSeller: true,
     category: "notepad",
     title: "Classic Notepad",
-    price: 1,
+    price: 200,
     image:
       "https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717652/Notepad_2_b82dme.jpg",
     description:
@@ -174,7 +175,7 @@ const baseProducts = [
     bestSeller: false,
     category: "notepad",
     title: "Office Notepad",
-    price: 1,
+    price: 200,
     image:
       "https://images.unsplash.com/photo-1531346680769-a1d79b57de5c?w=1200",
     description:
@@ -186,7 +187,7 @@ const baseProducts = [
     bestSeller: false,
     category: "notepad",
     title: "Designer Notepad",
-    price: 1,
+    price: 200,
     image:
       "https://images.unsplash.com/photo-1517842645767-c639042777db?w=1200",
     description:
@@ -198,7 +199,7 @@ const baseProducts = [
     bestSeller: false,
     category: "notepad",
     title: "Premium Notepad",
-    price: 1,
+    price: 200,
     image:
       "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1200",
     description:
