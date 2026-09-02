@@ -14,6 +14,22 @@ const razorpay = new Razorpay({
     process.env.RAZORPAY_KEY_SECRET,
 });
 
+// router.post(
+//   "/create-order",
+//   async (req, res) => {
+//     try {
+//       const { amount } = req.body;
+
+//       if (
+//         !amount ||
+//         Number(amount) < 100
+//       ) {
+//         return res.status(400).json({
+//           success: false,
+//           message:
+//             "Minimum amount should be ₹1",
+//         });
+//       }
 router.post(
   "/create-order",
   async (req, res) => {
@@ -21,16 +37,15 @@ router.post(
       const { amount } = req.body;
 
       if (
-        !amount ||
-        Number(amount) < 100
+        amount === undefined ||
+        amount === null ||
+        Number(amount) < 0
       ) {
         return res.status(400).json({
           success: false,
-          message:
-            "Minimum amount should be ₹1",
+          message: "Invalid amount",
         });
       }
-
       const order =
         await razorpay.orders.create({
           amount: Number(amount),
