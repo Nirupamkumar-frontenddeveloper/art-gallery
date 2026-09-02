@@ -20,10 +20,10 @@ function Checkout() {
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
+    address: "",
     pincode: "",
     city: "",
     state: "",
-    address: "",
   });
 
   const [isProcessing, setIsProcessing] =
@@ -63,23 +63,16 @@ function Checkout() {
       : checkoutData.total;
 
   const handlePayment = async () => {
-    const requiredFields = [
-      "fullName",
-      "phone",
-      "pincode",
-      "city",
-      "state",
-      "address",
-    ];
-
-    const isFormValid =
-      requiredFields.every(
-        (field) => formData[field].trim()
-      );
-
-    if (!isFormValid) {
+    if (
+      !formData.fullName ||
+      !formData.phone ||
+      !formData.address ||
+      !formData.pincode ||
+      !formData.city ||
+      !formData.state
+    ) {
       setStatus(
-        "Please fill all required delivery details"
+        "Please fill all delivery details"
       );
       return;
     }
@@ -102,6 +95,11 @@ function Checkout() {
     setIsProcessing(true);
 
     try {
+
+      /* ==============================
+         ORIGINAL CREATE ORDER LOGIC
+      ============================== */
+
       const { data } = await axios.post(
         "https://artionary-backend.onrender.com/api/create-order",
         {
@@ -127,6 +125,7 @@ function Checkout() {
 
         prefill: {
           name: formData.fullName,
+
           contact: formData.phone,
         },
 
@@ -136,6 +135,11 @@ function Checkout() {
 
         handler: async (response) => {
           try {
+
+            /* ==============================
+               ORIGINAL VERIFY PAYMENT LOGIC
+            ============================== */
+
             const verify =
               await axios.post(
                 "https://artionary-backend.onrender.com/api/verify-payment",
@@ -148,22 +152,15 @@ function Checkout() {
                   phone:
                     formData.phone,
 
-                  address: {
-                    fullAddress:
-                      formData.address,
+                  address:
+                    `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
 
-                    city:
-                      formData.city,
-
-                    state:
-                      formData.state,
-
-                    pincode:
-                      formData.pincode,
-                  },
+                  pincode:
+                    formData.pincode,
 
                   items:
-                    checkoutData.type === "single"
+                    checkoutData.type ===
+                    "single"
                       ? [
                           {
                             productId:
@@ -209,19 +206,24 @@ function Checkout() {
               );
 
             if (verify.data.success) {
+
               setStatus(
                 "Payment Successful"
               );
 
               navigate("/my-orders");
+
             } else {
+
               setStatus(
                 "Payment Verification Failed"
               );
 
               setIsProcessing(false);
             }
+
           } catch (error) {
+
             console.log(error);
 
             setStatus(
@@ -260,10 +262,11 @@ function Checkout() {
       razorpay.open();
 
     } catch (error) {
+
       console.log(error);
 
       setStatus(
-        "Unable to initiate payment. Please try again."
+        "Payment Failed"
       );
 
       setIsProcessing(false);
@@ -275,7 +278,7 @@ function Checkout() {
 
       <div className="checkout-wrapper">
 
-        {/* HEADER */}
+        {/* ================= HEADER ================= */}
 
         <div className="checkout-header">
 
@@ -288,6 +291,7 @@ function Checkout() {
           </button>
 
           <div>
+
             <span>
               SECURE CHECKOUT
             </span>
@@ -295,17 +299,18 @@ function Checkout() {
             <h1>
               Complete Your Order
             </h1>
+
           </div>
 
         </div>
 
 
-        {/* MAIN CHECKOUT */}
+        {/* ================= MAIN ================= */}
 
         <div className="checkout-container">
 
 
-          {/* ORDER SUMMARY */}
+          {/* ================= ORDER SUMMARY ================= */}
 
           <div className="checkout-left">
 
@@ -316,6 +321,7 @@ function Checkout() {
               </div>
 
               <div>
+
                 <span>
                   YOUR ORDER
                 </span>
@@ -323,6 +329,7 @@ function Checkout() {
                 <h2>
                   Order Summary
                 </h2>
+
               </div>
 
             </div>
@@ -330,35 +337,29 @@ function Checkout() {
 
             <div className="checkout-products">
 
-              {checkoutData.type ===
-              "single" ? (
+              {checkoutData.type === "single" ? (
 
                 <div className="checkout-product">
 
                   <img
                     src={
-                      checkoutData
-                        .product.image
+                      checkoutData.product.image
                     }
                     alt={
-                      checkoutData
-                        .product.title
+                      checkoutData.product.title
                     }
                   />
 
                   <div className="checkout-product-info">
 
                     <h3>
-                      {
-                        checkoutData
-                          .product.title
-                      }
+                      {checkoutData.product.title}
                     </h3>
 
                     <p>
                       {
-                        checkoutData
-                          .product.description
+                        checkoutData.product
+                          .description
                       }
                     </p>
 
@@ -371,8 +372,8 @@ function Checkout() {
                       <h4>
                         ₹
                         {
-                          checkoutData
-                            .product.price
+                          checkoutData.product
+                            .price
                         }
                       </h4>
 
@@ -431,11 +432,12 @@ function Checkout() {
             </div>
 
 
-            {/* PRICE SUMMARY */}
+            {/* ================= PRICE SUMMARY ================= */}
 
             <div className="checkout-price-summary">
 
               <div>
+
                 <span>
                   Subtotal
                 </span>
@@ -443,9 +445,12 @@ function Checkout() {
                 <strong>
                   ₹{totalAmount}
                 </strong>
+
               </div>
 
+
               <div>
+
                 <span>
                   Shipping
                 </span>
@@ -453,7 +458,9 @@ function Checkout() {
                 <strong className="free-shipping">
                   FREE
                 </strong>
+
               </div>
+
 
               <div className="total-row">
 
@@ -472,7 +479,7 @@ function Checkout() {
           </div>
 
 
-          {/* DELIVERY DETAILS */}
+          {/* ================= DELIVERY DETAILS ================= */}
 
           <div className="checkout-right">
 
@@ -483,6 +490,7 @@ function Checkout() {
               </div>
 
               <div>
+
                 <span>
                   DELIVERY ADDRESS
                 </span>
@@ -490,6 +498,7 @@ function Checkout() {
                 <h2>
                   Delivery Details
                 </h2>
+
               </div>
 
             </div>
@@ -611,7 +620,7 @@ function Checkout() {
               </div>
 
 
-              {/* COMPLETE ADDRESS */}
+              {/* ADDRESS */}
 
               <div className="form-group">
 
@@ -632,27 +641,29 @@ function Checkout() {
               {/* STATUS */}
 
               {status && (
+
                 <div className="checkout-status">
                   {status}
                 </div>
+
               )}
 
 
-              {/* PAYMENT BUTTON */}
+              {/* PAYMENT */}
 
               <button
                 className="checkout-btn"
                 onClick={handlePayment}
                 disabled={isProcessing}
               >
+
                 {isProcessing
                   ? "Processing Payment..."
                   : `Pay Securely ₹${totalAmount}`
                 }
+
               </button>
 
-
-              {/* SECURITY */}
 
               <div className="secure-payment">
 
