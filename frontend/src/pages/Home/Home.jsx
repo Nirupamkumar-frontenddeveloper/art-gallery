@@ -60,7 +60,7 @@ function Home() {
 
         <div className="hero-right">
           <img
-            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1781804932/ChatGPT_Image_Jun_18_2026_11_17_00_PM_noinsy.png"
+            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1788366402/ChatGPT_Image_Sep_2_2026_09_55_57_PM_qrydgd.png"
             alt="Artwork"
           />
         </div>
