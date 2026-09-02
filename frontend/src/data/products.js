@@ -6,7 +6,7 @@ const baseProducts = [
     bestSeller: true,
     category: "bookmarks",
     title: "Printed Bookmarks",
-    price: 0,
+    price: 1,
     image:
       "https://res.cloudinary.com/dcbvuidqn/image/upload/v1787686935/WhatsApp_Image_2026-08-26_at_1.10.49_AM_ehkjqf.jpg",
     description:
