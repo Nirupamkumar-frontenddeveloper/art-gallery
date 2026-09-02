@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const paymentRoutes = require("./routes/paymentRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 
@@ -17,12 +18,12 @@ app.use(
 );
 
 app.use("/api", paymentRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message:
-      "ARTIONARY Backend Running",
+    message: "ARTIONARY Backend Running",
   });
 });
 
