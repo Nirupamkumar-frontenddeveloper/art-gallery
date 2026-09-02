@@ -8,67 +8,60 @@ import { FaWhatsapp, FaStar } from "react-icons/fa";
 function Home() {
   const bestSellers = products.filter((item) => item.bestSeller);
 
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      name: "Priya Sharma",
-      rating: 5,
-      comment:
-        "The portrait exceeded my expectations. Every detail was beautifully captured.",
-    },
-    {
-      id: 2,
-      name: "Rahul Verma",
-      rating: 5,
-      comment:
-        "Perfect anniversary gift. The quality and packaging were outstanding.",
-    },
-    {
-      id: 3,
-      name: "Neha Kapoor",
-      rating: 5,
-      comment:
-        "My pet portrait looks amazing. Highly recommended for custom artwork.",
-    },
-  ]);
-
+  const [reviews, setReviews] = useState([]);
   const [name, setName] = useState("");
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
 
   useEffect(() => {
-    const savedReviews = localStorage.getItem("artionaryReviews");
+    const fetchReviews = async () => {
+      try {
+        const response = await axios.get(
+          "https://artionary-backend.onrender.com/api/reviews"
+        );
+        setReviews(response.data);
+      } catch (error) {
+        console.error("Failed to fetch reviews:", error);
+      }
+    };
 
-    if (savedReviews) {
-      setReviews(JSON.parse(savedReviews));
-    }
+    fetchReviews();
   }, []);
 
-  const handleReviewSubmit = (e) => {
+  const handleReviewSubmit = async (e) => {
     e.preventDefault();
 
     if (!name.trim() || !comment.trim()) return;
 
-    const newReview = {
-      id: Date.now(),
-      name: name.trim(),
-      comment: comment.trim(),
-      rating,
-    };
+    try {
+      const response = await axios.post(
+        "https://artionary-backend.onrender.com/api/reviews",
+        {
+          name: name.trim(),
+          rating,
+          comment: comment.trim(),
+        }
+      );
 
-    const updatedReviews = [newReview, ...reviews];
+      if (response.data.success) {
+        setReviews((prev) => [
+          response.data.review,
+          ...prev,
+        ]);
 
-    setReviews(updatedReviews);
-
-    localStorage.setItem(
-      "artionaryReviews",
-      JSON.stringify(updatedReviews)
-    );
-
-    setName("");
-    setComment("");
-    setRating(5);
+        setName("");
+        setComment("");
+        setRating(5);
+        setHoverRating(0);
+      }
+    } catch (error) {
+      console.error("Failed to submit review:", error);
+      alert(
+        error.response?.data?.message ||
+        "Failed to submit review"
+      );
+    }
   };
 
   return (
@@ -131,7 +124,10 @@ function Home() {
         </div>
 
         <div className="featured-grid">
-          <Link to="/paintings/bookmarks" className="featured-card standard">
+          <Link
+            to="/paintings/bookmarks"
+            className="featured-card standard"
+          >
             <img
               src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717653/Book_marks_vxvxc8.jpg"
               alt="Bookmarks"
@@ -146,7 +142,10 @@ function Home() {
             </div>
           </Link>
 
-          <Link to="/paintings/planners" className="featured-card">
+          <Link
+            to="/paintings/planners"
+            className="featured-card"
+          >
             <img
               src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717651/planner_qkgtr8.jpg"
               alt="Planners"
@@ -161,7 +160,10 @@ function Home() {
             </div>
           </Link>
 
-          <Link to="/paintings/journals" className="featured-card">
+          <Link
+            to="/paintings/journals"
+            className="featured-card"
+          >
             <img
               src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717650/journal2_zpzrxc.jpg"
               alt="Journals"
@@ -176,7 +178,10 @@ function Home() {
             </div>
           </Link>
 
-          <Link to="/paintings/notepad" className="featured-card wide">
+          <Link
+            to="/paintings/notepad"
+            className="featured-card wide"
+          >
             <img
               src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717652/Notepad_2_b82dme.jpg"
               alt="Notepad"
@@ -191,7 +196,10 @@ function Home() {
             </div>
           </Link>
 
-          <Link to="/paintings/paintings" className="featured-card">
+          <Link
+            to="/paintings/paintings"
+            className="featured-card"
+          >
             <img
               src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1785337298/SKM_C55826071122440_ze3glf.jpg"
               alt="Paintings"
@@ -206,7 +214,10 @@ function Home() {
             </div>
           </Link>
 
-          <Link to="/paintings/posters" className="featured-card">
+          <Link
+            to="/paintings/posters"
+            className="featured-card"
+          >
             <img
               src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1785341569/WhatsApp_Image_2026-07-29_at_8.36.57_PM_sjgecn.jpg"
               alt="Posters"
@@ -231,13 +242,20 @@ function Home() {
 
         <div className="products-grid">
           {bestSellers.map((product) => (
-            <div className="product-card" key={product.id}>
-              <img src={product.image} alt={product.title} />
+            <div
+              className="product-card"
+              key={product.id}
+            >
+              <img
+                src={product.image}
+                alt={product.title}
+              />
 
               <div className="product-content">
                 <h3>{product.title}</h3>
-
-                <p>Starting from ₹{product.price}</p>
+                <p>
+                  Starting from ₹{product.price}
+                </p>
 
                 <Link
                   to={`/product/${product.id}`}
@@ -262,8 +280,9 @@ function Home() {
             <div className="why-number">01</div>
             <h3>Handcrafted</h3>
             <p>
-              Every artwork is carefully crafted with attention to detail and
-              artistic excellence.
+              Every artwork is carefully crafted
+              with attention to detail and artistic
+              excellence.
             </p>
           </div>
 
@@ -271,8 +290,8 @@ function Home() {
             <div className="why-number">02</div>
             <h3>Personalized</h3>
             <p>
-              Custom creations designed around your memories, stories and
-              special moments.
+              Custom creations designed around your
+              memories, stories and special moments.
             </p>
           </div>
 
@@ -280,8 +299,8 @@ function Home() {
             <div className="why-number">03</div>
             <h3>Premium Quality</h3>
             <p>
-              High-quality materials and printing techniques ensure lasting
-              beauty.
+              High-quality materials and printing
+              techniques ensure lasting beauty.
             </p>
           </div>
 
@@ -289,7 +308,8 @@ function Home() {
             <div className="why-number">04</div>
             <h3>Fast Delivery</h3>
             <p>
-              Safe packaging and reliable shipping right to your doorstep.
+              Safe packaging and reliable shipping
+              right to your doorstep.
             </p>
           </div>
         </div>
@@ -302,26 +322,37 @@ function Home() {
         </div>
 
         <div className="testimonial-grid">
-          {reviews.map((review) => (
-            <div className="testimonial-card" key={review.id}>
-              <div className="stars">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <FaStar
-                    key={star}
-                    className={
-                      star <= review.rating
-                        ? "review-star filled"
-                        : "review-star"
-                    }
-                  />
-                ))}
+          {reviews.length > 0 ? (
+            reviews.map((review) => (
+              <div
+                className="testimonial-card"
+                key={review.id}
+              >
+                <div className="stars">
+                  {[1, 2, 3, 4, 5].map(
+                    (star) => (
+                      <FaStar
+                        key={star}
+                        className={
+                          star <= review.rating
+                            ? "review-star filled"
+                            : "review-star"
+                        }
+                      />
+                    )
+                  )}
+                </div>
+
+                <p>{review.comment}</p>
+                <h4>{review.name}</h4>
               </div>
-
-              <p>{review.comment}</p>
-
-              <h4>{review.name}</h4>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="no-reviews">
+              No reviews yet. Be the first to share
+              your experience!
+            </p>
+          )}
         </div>
 
         <div className="review-form-wrapper">
@@ -354,23 +385,28 @@ function Home() {
               <span>Your Rating:</span>
 
               <div className="rating-stars">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <FaStar
-                    key={star}
-                    onClick={() => setRating(star)}
-                    onMouseEnter={() =>
-                      setHoverRating(star)
-                    }
-                    onMouseLeave={() =>
-                      setHoverRating(0)
-                    }
-                    className={
-                      star <= (hoverRating || rating)
-                        ? "interactive-star active"
-                        : "interactive-star"
-                    }
-                  />
-                ))}
+                {[1, 2, 3, 4, 5].map(
+                  (star) => (
+                    <FaStar
+                      key={star}
+                      onClick={() =>
+                        setRating(star)
+                      }
+                      onMouseEnter={() =>
+                        setHoverRating(star)
+                      }
+                      onMouseLeave={() =>
+                        setHoverRating(0)
+                      }
+                      className={
+                        star <=
+                        (hoverRating || rating)
+                          ? "interactive-star active"
+                          : "interactive-star"
+                      }
+                    />
+                  )
+                )}
               </div>
             </div>
 
