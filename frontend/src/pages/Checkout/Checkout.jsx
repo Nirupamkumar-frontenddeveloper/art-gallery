@@ -6,9 +6,10 @@ import {
   FaMapMarkerAlt,
   FaUser,
   FaPhoneAlt,
-  FaCreditCard,
+  FaShoppingBag,
   FaLock,
 } from "react-icons/fa";
+
 import "./Checkout.css";
 
 function Checkout() {
@@ -21,9 +22,9 @@ function Checkout() {
     fullName: "",
     phone: "",
     address: "",
-    pincode: "",
     city: "",
     state: "",
+    pincode: "",
   });
 
   const [isProcessing, setIsProcessing] =
@@ -35,11 +36,15 @@ function Checkout() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
+
+  /* ===============================
+     NO CHECKOUT DATA
+  =============================== */
 
   if (!checkoutData) {
     return (
@@ -47,9 +52,7 @@ function Checkout() {
         <div>
           <h2>No Product Selected</h2>
 
-          <button
-            onClick={() => navigate("/")}
-          >
+          <button onClick={() => navigate("/")}>
             Continue Shopping
           </button>
         </div>
@@ -57,19 +60,27 @@ function Checkout() {
     );
   }
 
+  /* ===============================
+     TOTAL AMOUNT
+  =============================== */
+
   const totalAmount =
     checkoutData.type === "single"
-      ? checkoutData.product.price
-      : checkoutData.total;
+      ? Number(checkoutData.product.price)
+      : Number(checkoutData.total);
+
+  /* ===============================
+     PAYMENT HANDLER
+  =============================== */
 
   const handlePayment = async () => {
     if (
-      !formData.fullName ||
-      !formData.phone ||
-      !formData.address ||
-      !formData.pincode ||
-      !formData.city ||
-      !formData.state
+      !formData.fullName.trim() ||
+      !formData.phone.trim() ||
+      !formData.address.trim() ||
+      !formData.city.trim() ||
+      !formData.state.trim() ||
+      !formData.pincode.trim()
     ) {
       setStatus(
         "Please fill all delivery details"
@@ -95,17 +106,32 @@ function Checkout() {
     setIsProcessing(true);
 
     try {
+      /* =================================
+         CREATE RAZORPAY ORDER
 
-      /* ==============================
-         ORIGINAL CREATE ORDER LOGIC
-      ============================== */
+         Backend route:
+         router.post("/create-order")
+
+         Assuming:
+         app.use("/api", router)
+      ================================= */
 
       const { data } = await axios.post(
         "https://artionary-backend.onrender.com/api/create-order",
         {
-          amount: totalAmount * 100,
+          amount: Math.round(totalAmount * 100),
         }
       );
+
+      if (!data.success) {
+        throw new Error(
+          "Order creation failed"
+        );
+      }
+
+      /* =================================
+         RAZORPAY OPTIONS
+      ================================= */
 
       const options = {
         key:
@@ -133,106 +159,129 @@ function Checkout() {
           color: "#b08d57",
         },
 
+        /* =================================
+           PAYMENT SUCCESS
+        ================================= */
+
         handler: async (response) => {
           try {
+            /*
+              Backend expects:
 
-            /* ==============================
-               ORIGINAL VERIFY PAYMENT LOGIC
-            ============================== */
+              customerName
+              phone
+              address
+              pincode
+              items
+              totalAmount
+            */
+
+            const completeAddress = `
+${formData.address},
+${formData.city},
+${formData.state} - ${formData.pincode}
+            `.trim();
+
+            const verifyPayload = {
+              ...response,
+
+              customerName:
+                formData.fullName,
+
+              phone:
+                formData.phone,
+
+              address:
+                completeAddress,
+
+              pincode:
+                formData.pincode,
+
+              items:
+                checkoutData.type === "single"
+                  ? [
+                      {
+                        productId:
+                          checkoutData.product.id,
+
+                        title:
+                          checkoutData.product.title,
+
+                        image:
+                          checkoutData.product.image,
+
+                        quantity: 1,
+
+                        price:
+                          checkoutData.product.price,
+                      },
+                    ]
+                  : checkoutData.items.map(
+                      (item) => ({
+                        productId: item.id,
+
+                        title: item.title,
+
+                        image: item.image,
+
+                        quantity: item.quantity,
+
+                        price: item.price,
+                      })
+                    ),
+
+              totalAmount:
+                totalAmount,
+            };
 
             const verify =
               await axios.post(
                 "https://artionary-backend.onrender.com/api/verify-payment",
-                {
-                  ...response,
-
-                  customerName:
-                    formData.fullName,
-
-                  phone:
-                    formData.phone,
-
-                  address:
-                    `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
-
-                  pincode:
-                    formData.pincode,
-
-                  items:
-                    checkoutData.type ===
-                    "single"
-                      ? [
-                          {
-                            productId:
-                              checkoutData
-                                .product.id,
-
-                            title:
-                              checkoutData
-                                .product.title,
-
-                            image:
-                              checkoutData
-                                .product.image,
-
-                            quantity: 1,
-
-                            price:
-                              checkoutData
-                                .product.price,
-                          },
-                        ]
-                      : checkoutData.items.map(
-                          (item) => ({
-                            productId:
-                              item.id,
-
-                            title:
-                              item.title,
-
-                            image:
-                              item.image,
-
-                            quantity:
-                              item.quantity,
-
-                            price:
-                              item.price,
-                          })
-                        ),
-
-                  totalAmount,
-                }
+                verifyPayload
               );
 
             if (verify.data.success) {
-
               setStatus(
                 "Payment Successful"
               );
 
-              navigate("/my-orders");
+              /*
+                Small delay so user doesn't
+                see abrupt navigation
+              */
+
+              setTimeout(() => {
+                navigate("/my-orders", {
+                  state: {
+                    phone: formData.phone,
+                  },
+                });
+              }, 500);
 
             } else {
-
-              setStatus(
-                "Payment Verification Failed"
+              throw new Error(
+                verify.data.message ||
+                  "Payment verification failed"
               );
-
-              setIsProcessing(false);
             }
 
           } catch (error) {
-
-            console.log(error);
+            console.error(
+              "Verification Error:",
+              error
+            );
 
             setStatus(
-              "Payment Verification Failed"
+              "Payment verification failed"
             );
 
             setIsProcessing(false);
           }
         },
+
+        /* =================================
+           RAZORPAY MODAL CLOSED
+        ================================= */
 
         modal: {
           ondismiss: () => {
@@ -250,9 +299,14 @@ function Checkout() {
 
       razorpay.on(
         "payment.failed",
-        () => {
+        (response) => {
+          console.error(
+            "Payment Failed:",
+            response
+          );
+
           setStatus(
-            "Payment Failed"
+            "Payment Failed. Please try again."
           );
 
           setIsProcessing(false);
@@ -262,11 +316,14 @@ function Checkout() {
       razorpay.open();
 
     } catch (error) {
-
-      console.log(error);
+      console.error(
+        "Payment Error:",
+        error
+      );
 
       setStatus(
-        "Payment Failed"
+        error.response?.data?.message ||
+          "Unable to initiate payment"
       );
 
       setIsProcessing(false);
@@ -291,7 +348,6 @@ function Checkout() {
           </button>
 
           <div>
-
             <span>
               SECURE CHECKOUT
             </span>
@@ -299,13 +355,12 @@ function Checkout() {
             <h1>
               Complete Your Order
             </h1>
-
           </div>
 
         </div>
 
 
-        {/* ================= MAIN ================= */}
+        {/* ================= MAIN CONTAINER ================= */}
 
         <div className="checkout-container">
 
@@ -317,11 +372,10 @@ function Checkout() {
             <div className="checkout-section-title">
 
               <div className="title-icon">
-                <FaCreditCard />
+                <FaShoppingBag />
               </div>
 
               <div>
-
                 <span>
                   YOUR ORDER
                 </span>
@@ -329,7 +383,6 @@ function Checkout() {
                 <h2>
                   Order Summary
                 </h2>
-
               </div>
 
             </div>
@@ -356,12 +409,14 @@ function Checkout() {
                       {checkoutData.product.title}
                     </h3>
 
-                    <p>
-                      {
-                        checkoutData.product
-                          .description
-                      }
-                    </p>
+                    {checkoutData.product.description && (
+                      <p>
+                        {
+                          checkoutData.product
+                            .description
+                        }
+                      </p>
+                    )}
 
                     <div className="product-meta">
 
@@ -372,8 +427,7 @@ function Checkout() {
                       <h4>
                         ₹
                         {
-                          checkoutData.product
-                            .price
+                          checkoutData.product.price
                         }
                       </h4>
 
@@ -437,7 +491,6 @@ function Checkout() {
             <div className="checkout-price-summary">
 
               <div>
-
                 <span>
                   Subtotal
                 </span>
@@ -445,12 +498,9 @@ function Checkout() {
                 <strong>
                   ₹{totalAmount}
                 </strong>
-
               </div>
 
-
               <div>
-
                 <span>
                   Shipping
                 </span>
@@ -458,9 +508,7 @@ function Checkout() {
                 <strong className="free-shipping">
                   FREE
                 </strong>
-
               </div>
-
 
               <div className="total-row">
 
@@ -490,7 +538,6 @@ function Checkout() {
               </div>
 
               <div>
-
                 <span>
                   DELIVERY ADDRESS
                 </span>
@@ -498,7 +545,6 @@ function Checkout() {
                 <h2>
                   Delivery Details
                 </h2>
-
               </div>
 
             </div>
@@ -524,9 +570,13 @@ function Checkout() {
                     <input
                       type="text"
                       name="fullName"
-                      placeholder="Enter your full name"
-                      value={formData.fullName}
-                      onChange={handleChange}
+                      placeholder="Enter full name"
+                      value={
+                        formData.fullName
+                      }
+                      onChange={
+                        handleChange
+                      }
                     />
 
                   </div>
@@ -548,8 +598,12 @@ function Checkout() {
                       type="tel"
                       name="phone"
                       placeholder="10 digit mobile number"
-                      value={formData.phone}
-                      onChange={handleChange}
+                      value={
+                        formData.phone
+                      }
+                      onChange={
+                        handleChange
+                      }
                       maxLength="10"
                     />
 
@@ -574,8 +628,12 @@ function Checkout() {
                     type="text"
                     name="pincode"
                     placeholder="6 digit pincode"
-                    value={formData.pincode}
-                    onChange={handleChange}
+                    value={
+                      formData.pincode
+                    }
+                    onChange={
+                      handleChange
+                    }
                     maxLength="6"
                   />
 
@@ -592,8 +650,12 @@ function Checkout() {
                     type="text"
                     name="city"
                     placeholder="Enter city"
-                    value={formData.city}
-                    onChange={handleChange}
+                    value={
+                      formData.city
+                    }
+                    onChange={
+                      handleChange
+                    }
                   />
 
                 </div>
@@ -613,14 +675,18 @@ function Checkout() {
                   type="text"
                   name="state"
                   placeholder="Enter state"
-                  value={formData.state}
-                  onChange={handleChange}
+                  value={
+                    formData.state
+                  }
+                  onChange={
+                    handleChange
+                  }
                 />
 
               </div>
 
 
-              {/* ADDRESS */}
+              {/* COMPLETE ADDRESS */}
 
               <div className="form-group">
 
@@ -630,9 +696,13 @@ function Checkout() {
 
                 <textarea
                   name="address"
-                  placeholder="House / Flat No., Building, Street, Area"
-                  value={formData.address}
-                  onChange={handleChange}
+                  placeholder="House/Flat No., Building, Street, Area"
+                  value={
+                    formData.address
+                  }
+                  onChange={
+                    handleChange
+                  }
                 />
 
               </div>
@@ -641,15 +711,13 @@ function Checkout() {
               {/* STATUS */}
 
               {status && (
-
                 <div className="checkout-status">
                   {status}
                 </div>
-
               )}
 
 
-              {/* PAYMENT */}
+              {/* PAYMENT BUTTON */}
 
               <button
                 className="checkout-btn"
@@ -658,7 +726,7 @@ function Checkout() {
               >
 
                 {isProcessing
-                  ? "Processing Payment..."
+                  ? "Processing..."
                   : `Pay Securely ₹${totalAmount}`
                 }
 
