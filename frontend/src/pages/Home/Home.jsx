@@ -11,7 +11,7 @@ function Home() {
     <>
 
     <a
-  href="https://wa.me/917322859421?text=I%20want%20to%20buy"
+  href="https://wa.me/918796523785?text=I%20want%20to%20buy"
   className="whatsapp-button"
   target="_blank"
   rel="noopener noreferrer"
@@ -36,13 +36,25 @@ function Home() {
           </p>
 
           <div className="hero-buttons">
-            <button className="primary-btn">
-              Explore Collection
-            </button>
+          
 
-            <button className="secondary-btn">
+<button
+  className="primary-btn"
+  onClick={() => {
+    document
+      .querySelector(".featured-section")
+      ?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+  }}
+>
+  Explore Collection
+</button>
+
+            {/* <button className="secondary-btn">
               About Us
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -54,136 +66,140 @@ function Home() {
         </div>
       </section>
 
-      <section className="featured-section">
+<section className="featured-section">
         <div className="section-heading">
           <span>OUR COLLECTIONS</span>
           <h2>Art For Every Memory</h2>
         </div>
 
-        <div className="featured-grid">
+```
+    <div className="featured-grid">
 
-          <Link
-            to="/paintings/bookmarks"
-            className="featured-card standard"
-          >
-            <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717653/Book_marks_vxvxc8.jpg"
-              alt="Bookmarks"
-            />
+      <Link
+        to="/paintings/bookmarks"
+        className="featured-card standard"
+      >
+        <img
+          src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717653/Book_marks_vxvxc8.jpg"
+          alt="Bookmarks"
+        />
 
-            <div className="featured-overlay">
-              <div>
-                <h3>Bookmarks</h3>
+        <div className="featured-overlay">
+          <div>
+            <h3>Bookmarks</h3>
 
-                <span className="art-btn collection-btn">
-                  Explore Collection →
-                </span>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            to="/paintings/planners"
-            className="featured-card"
-          >
-            <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717651/planner_qkgtr8.jpg"
-              alt="Planners"
-            />
-
-            <div className="featured-overlay">
-              <div>
-                <h3>Planners</h3>
-
-                <span className="art-btn collection-btn">
-                  Explore Collection →
-                </span>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            to="/paintings/journals"
-            className="featured-card"
-          >
-            <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717650/journal2_zpzrxc.jpg"
-              alt="Journals"
-            />
-
-            <div className="featured-overlay">
-              <div>
-                <h3>Journals</h3>
-
-                <span className="art-btn collection-btn">
-                  Explore Collection →
-                </span>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            to="/paintings/notepad"
-            className="featured-card wide"
-          >
-            <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1781717652/Notepad_2_b82dme.jpg"
-              alt="Notepad"
-            />
-
-            <div className="featured-overlay">
-              <div>
-                <h3>Notepad</h3>
-
-                <span className="art-btn collection-btn">
-                  Explore Collection →
-                </span>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            to="/paintings/paintings"
-            className="featured-card"
-          >
-            <img
-  src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1785337298/SKM_C55826071122440_ze3glf.jpg"
-  alt="Paintings"
-/>
-
-            <div className="featured-overlay">
-              <div>
-                <h3>Paintings</h3>
-
-                <span className="art-btn collection-btn">
-                  Explore Collection →
-                </span>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            to="/paintings/posters"
-            className="featured-card"
-          >
-            <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1785341569/WhatsApp_Image_2026-07-29_at_8.36.57_PM_sjgecn.jpg"
-              alt="Posters"
-            />
-
-            <div className="featured-overlay">
-              <div>
-                <h3>Posters</h3>
-
-                <span className="art-btn collection-btn">
-                  Explore Collection →
-                </span>
-              </div>
-            </div>
-          </Link>
-
+            <span className="art-btn collection-btn">
+              Explore Collection →
+            </span>
+          </div>
         </div>
-      </section>
+      </Link>
+
+      <Link
+        to="/paintings/planners"
+        className="featured-card"
+      >
+        <img
+          src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717651/planner_qkgtr8.jpg"
+          alt="Planners"
+        />
+
+        <div className="featured-overlay">
+          <div>
+            <h3>Planners</h3>
+
+            <span className="art-btn collection-btn">
+              Explore Collection →
+            </span>
+          </div>
+        </div>
+      </Link>
+
+      <Link
+        to="/paintings/journals"
+        className="featured-card"
+      >
+        <img
+          src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717650/journal2_zpzrxc.jpg"
+          alt="Journals"
+        />
+
+        <div className="featured-overlay">
+          <div>
+            <h3>Journals</h3>
+
+            <span className="art-btn collection-btn">
+              Explore Collection →
+            </span>
+          </div>
+        </div>
+      </Link>
+
+      <Link
+        to="/paintings/notepad"
+        className="featured-card wide"
+      >
+        <img
+          src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717652/Notepad_2_b82dme.jpg"
+          alt="Notepad"
+        />
+
+        <div className="featured-overlay">
+          <div>
+            <h3>Notepad</h3>
+
+            <span className="art-btn collection-btn">
+              Explore Collection →
+            </span>
+          </div>
+        </div>
+      </Link>
+
+      <Link
+        to="/paintings/paintings"
+        className="featured-card"
+      >
+        <img
+
+
+src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1785337298/SKM_C55826071122440_ze3glf.jpg"
+alt="Paintings"
+/>
+        <div className="featured-overlay">
+          <div>
+            <h3>Paintings</h3>
+
+            <span className="art-btn collection-btn">
+              Explore Collection →
+            </span>
+          </div>
+        </div>
+      </Link>
+
+      <Link
+        to="/paintings/posters"
+        className="featured-card"
+      >
+        <img
+          src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1785341569/WhatsApp_Image_2026-07-29_at_8.36.57_PM_sjgecn.jpg" 
+          alt="Posters" 
+        /> 
+
+        <div className="featured-overlay"> 
+          <div> 
+            <h3>Posters</h3> 
+
+            <span className="art-btn collection-btn"> 
+              Explore Collection → 
+            </span> 
+          </div> 
+        </div> 
+      </Link> 
+
+    </div> 
+  </section>
+```
+
 
       <section className="best-selling-section">
         <div className="best-selling-heading">

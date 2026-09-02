@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  FaArrowLeft,
+  FaMapMarkerAlt,
+  FaUser,
+  FaPhoneAlt,
+  FaCreditCard,
+  FaLock,
+} from "react-icons/fa";
 import "./Checkout.css";
 
 function Checkout() {
@@ -12,23 +20,39 @@ function Checkout() {
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
-    address: "",
     pincode: "",
+    city: "",
+    state: "",
+    address: "",
   });
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [status, setStatus] = useState("");
+
+  const [isProcessing, setIsProcessing] =
+    useState(false);
+
+  const [status, setStatus] =
+    useState("");
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
   if (!checkoutData) {
     return (
       <div className="checkout-empty">
-        No Product Selected
+        <div>
+          <h2>No Product Selected</h2>
+
+          <button
+            onClick={() => navigate("/")}
+          >
+            Continue Shopping
+          </button>
+        </div>
       </div>
     );
   }
@@ -39,13 +63,38 @@ function Checkout() {
       : checkoutData.total;
 
   const handlePayment = async () => {
-    if (
-      !formData.fullName ||
-      !formData.phone ||
-      !formData.address ||
-      !formData.pincode
-    ) {
-      setStatus("Please fill all fields");
+    const requiredFields = [
+      "fullName",
+      "phone",
+      "pincode",
+      "city",
+      "state",
+      "address",
+    ];
+
+    const isFormValid =
+      requiredFields.every(
+        (field) => formData[field].trim()
+      );
+
+    if (!isFormValid) {
+      setStatus(
+        "Please fill all required delivery details"
+      );
+      return;
+    }
+
+    if (!/^\d{10}$/.test(formData.phone)) {
+      setStatus(
+        "Please enter a valid 10 digit phone number"
+      );
+      return;
+    }
+
+    if (!/^\d{6}$/.test(formData.pincode)) {
+      setStatus(
+        "Please enter a valid 6 digit pincode"
+      );
       return;
     }
 
@@ -77,20 +126,15 @@ function Checkout() {
           "Artwork Purchase",
 
         prefill: {
-          name:
-            formData.fullName,
-
-          contact:
-            formData.phone,
+          name: formData.fullName,
+          contact: formData.phone,
         },
 
         theme: {
           color: "#b08d57",
         },
 
-        handler: async (
-          response
-        ) => {
+        handler: async (response) => {
           try {
             const verify =
               await axios.post(
@@ -104,15 +148,22 @@ function Checkout() {
                   phone:
                     formData.phone,
 
-                  address:
-                    formData.address,
+                  address: {
+                    fullAddress:
+                      formData.address,
 
-                  pincode:
-                    formData.pincode,
+                    city:
+                      formData.city,
+
+                    state:
+                      formData.state,
+
+                    pincode:
+                      formData.pincode,
+                  },
 
                   items:
-                    checkoutData.type ===
-                    "single"
+                    checkoutData.type === "single"
                       ? [
                           {
                             productId:
@@ -135,9 +186,7 @@ function Checkout() {
                           },
                         ]
                       : checkoutData.items.map(
-                          (
-                            item
-                          ) => ({
+                          (item) => ({
                             productId:
                               item.id,
 
@@ -160,38 +209,63 @@ function Checkout() {
               );
 
             if (verify.data.success) {
-              setStatus("Payment Successful");
+              setStatus(
+                "Payment Successful"
+              );
+
               navigate("/my-orders");
+            } else {
+              setStatus(
+                "Payment Verification Failed"
+              );
+
+              setIsProcessing(false);
             }
           } catch (error) {
             console.log(error);
-            setStatus("Payment Verification Failed");
+
+            setStatus(
+              "Payment Verification Failed"
+            );
+
             setIsProcessing(false);
           }
         },
 
         modal: {
           ondismiss: () => {
-            setStatus("Payment Cancelled");
+            setStatus(
+              "Payment Cancelled"
+            );
+
             setIsProcessing(false);
           },
         },
       };
 
       const razorpay =
-        new window.Razorpay(
-          options
-        );
+        new window.Razorpay(options);
 
-      razorpay.on("payment.failed", () => {
-        setStatus("Payment Failed");
-        setIsProcessing(false);
-      });
+      razorpay.on(
+        "payment.failed",
+        () => {
+          setStatus(
+            "Payment Failed"
+          );
+
+          setIsProcessing(false);
+        }
+      );
 
       razorpay.open();
+
     } catch (error) {
       console.log(error);
-      setStatus("Payment Failed");
+
+      setStatus(
+        "Unable to initiate payment. Please try again."
+      );
+
       setIsProcessing(false);
     }
   };
@@ -199,165 +273,400 @@ function Checkout() {
   return (
     <section className="checkout-page">
 
-      <div className="checkout-container">
+      <div className="checkout-wrapper">
 
-        <div className="checkout-left">
+        {/* HEADER */}
 
-          <h2>
-            Order Summary
-          </h2>
+        <div className="checkout-header">
 
-          {checkoutData.type ===
-          "single" ? (
-            <div className="checkout-product">
+          <button
+            className="checkout-back-btn"
+            onClick={() => navigate(-1)}
+          >
+            <FaArrowLeft />
+            Back
+          </button>
 
-              <img
-                src={
-                  checkoutData
-                    .product.image
-                }
-                alt=""
-              />
+          <div>
+            <span>
+              SECURE CHECKOUT
+            </span>
 
-              <div>
-
-                <h3>
-                  {
-                    checkoutData
-                      .product.title
-                  }
-                </h3>
-
-                <p>
-                  {
-                    checkoutData
-                      .product.description
-                  }
-                </p>
-
-                <h4>
-                  ₹
-                  {
-                    checkoutData
-                      .product.price
-                  }
-                </h4>
-
-              </div>
-
-            </div>
-          ) : (
-            checkoutData.items.map(
-              (item) => (
-                <div
-                  className="checkout-product"
-                  key={item.id}
-                >
-
-                  <img
-                    src={item.image}
-                    alt=""
-                  />
-
-                  <div>
-
-                    <h3>
-                      {item.title}
-                    </h3>
-
-                    <p>
-                      Qty :
-                      {
-                        item.quantity
-                      }
-                    </p>
-
-                    <h4>
-                      ₹
-                      {item.price *
-                        item.quantity}
-                    </h4>
-
-                  </div>
-
-                </div>
-              )
-            )
-          )}
-
-          <div className="checkout-total">
-            Total :
-            ₹{totalAmount}
+            <h1>
+              Complete Your Order
+            </h1>
           </div>
 
         </div>
 
-        <div className="checkout-right">
 
-          <h2>
-            Delivery Details
-          </h2>
+        {/* MAIN CHECKOUT */}
 
-          <input
-            type="text"
-            name="fullName"
-            placeholder="Full Name"
-            value={
-              formData.fullName
-            }
-            onChange={
-              handleChange
-            }
-          />
+        <div className="checkout-container">
 
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone Number"
-            value={
-              formData.phone
-            }
-            onChange={
-              handleChange
-            }
-          />
 
-          <textarea
-            name="address"
-            placeholder="Address"
-            value={
-              formData.address
-            }
-            onChange={
-              handleChange
-            }
-          />
+          {/* ORDER SUMMARY */}
 
-          <input
-            type="text"
-            name="pincode"
-            placeholder="Pincode"
-            value={
-              formData.pincode
-            }
-            onChange={
-              handleChange
-            }
-          />
+          <div className="checkout-left">
 
-          {status && (
-            <div className="checkout-status">
-              {status}
+            <div className="checkout-section-title">
+
+              <div className="title-icon">
+                <FaCreditCard />
+              </div>
+
+              <div>
+                <span>
+                  YOUR ORDER
+                </span>
+
+                <h2>
+                  Order Summary
+                </h2>
+              </div>
+
             </div>
-          )}
 
-          <button
-            className="checkout-btn"
-            onClick={handlePayment}
-            disabled={isProcessing}
-          >
-            {isProcessing ? `Processing...` : `Pay ₹${totalAmount}`}
-          </button>
+
+            <div className="checkout-products">
+
+              {checkoutData.type ===
+              "single" ? (
+
+                <div className="checkout-product">
+
+                  <img
+                    src={
+                      checkoutData
+                        .product.image
+                    }
+                    alt={
+                      checkoutData
+                        .product.title
+                    }
+                  />
+
+                  <div className="checkout-product-info">
+
+                    <h3>
+                      {
+                        checkoutData
+                          .product.title
+                      }
+                    </h3>
+
+                    <p>
+                      {
+                        checkoutData
+                          .product.description
+                      }
+                    </p>
+
+                    <div className="product-meta">
+
+                      <span>
+                        Qty: 1
+                      </span>
+
+                      <h4>
+                        ₹
+                        {
+                          checkoutData
+                            .product.price
+                        }
+                      </h4>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              ) : (
+
+                checkoutData.items.map(
+                  (item) => (
+
+                    <div
+                      className="checkout-product"
+                      key={item.id}
+                    >
+
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                      />
+
+                      <div className="checkout-product-info">
+
+                        <h3>
+                          {item.title}
+                        </h3>
+
+                        <div className="product-meta">
+
+                          <span>
+                            Qty: {item.quantity}
+                          </span>
+
+                          <h4>
+                            ₹
+                            {
+                              item.price *
+                              item.quantity
+                            }
+                          </h4>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                  )
+                )
+
+              )}
+
+            </div>
+
+
+            {/* PRICE SUMMARY */}
+
+            <div className="checkout-price-summary">
+
+              <div>
+                <span>
+                  Subtotal
+                </span>
+
+                <strong>
+                  ₹{totalAmount}
+                </strong>
+              </div>
+
+              <div>
+                <span>
+                  Shipping
+                </span>
+
+                <strong className="free-shipping">
+                  FREE
+                </strong>
+              </div>
+
+              <div className="total-row">
+
+                <span>
+                  Total Amount
+                </span>
+
+                <strong>
+                  ₹{totalAmount}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          {/* DELIVERY DETAILS */}
+
+          <div className="checkout-right">
+
+            <div className="checkout-section-title">
+
+              <div className="title-icon">
+                <FaMapMarkerAlt />
+              </div>
+
+              <div>
+                <span>
+                  DELIVERY ADDRESS
+                </span>
+
+                <h2>
+                  Delivery Details
+                </h2>
+              </div>
+
+            </div>
+
+
+            <div className="checkout-form">
+
+
+              {/* NAME + PHONE */}
+
+              <div className="form-row">
+
+                <div className="form-group">
+
+                  <label>
+                    Full Name *
+                  </label>
+
+                  <div className="input-wrapper">
+
+                    <FaUser />
+
+                    <input
+                      type="text"
+                      name="fullName"
+                      placeholder="Enter your full name"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                    />
+
+                  </div>
+
+                </div>
+
+
+                <div className="form-group">
+
+                  <label>
+                    Phone Number *
+                  </label>
+
+                  <div className="input-wrapper">
+
+                    <FaPhoneAlt />
+
+                    <input
+                      type="tel"
+                      name="phone"
+                      placeholder="10 digit mobile number"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      maxLength="10"
+                    />
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              {/* PINCODE + CITY */}
+
+              <div className="form-row">
+
+                <div className="form-group">
+
+                  <label>
+                    Pincode *
+                  </label>
+
+                  <input
+                    type="text"
+                    name="pincode"
+                    placeholder="6 digit pincode"
+                    value={formData.pincode}
+                    onChange={handleChange}
+                    maxLength="6"
+                  />
+
+                </div>
+
+
+                <div className="form-group">
+
+                  <label>
+                    City *
+                  </label>
+
+                  <input
+                    type="text"
+                    name="city"
+                    placeholder="Enter city"
+                    value={formData.city}
+                    onChange={handleChange}
+                  />
+
+                </div>
+
+              </div>
+
+
+              {/* STATE */}
+
+              <div className="form-group">
+
+                <label>
+                  State *
+                </label>
+
+                <input
+                  type="text"
+                  name="state"
+                  placeholder="Enter state"
+                  value={formData.state}
+                  onChange={handleChange}
+                />
+
+              </div>
+
+
+              {/* COMPLETE ADDRESS */}
+
+              <div className="form-group">
+
+                <label>
+                  Complete Address *
+                </label>
+
+                <textarea
+                  name="address"
+                  placeholder="House / Flat No., Building, Street, Area"
+                  value={formData.address}
+                  onChange={handleChange}
+                />
+
+              </div>
+
+
+              {/* STATUS */}
+
+              {status && (
+                <div className="checkout-status">
+                  {status}
+                </div>
+              )}
+
+
+              {/* PAYMENT BUTTON */}
+
+              <button
+                className="checkout-btn"
+                onClick={handlePayment}
+                disabled={isProcessing}
+              >
+                {isProcessing
+                  ? "Processing Payment..."
+                  : `Pay Securely ₹${totalAmount}`
+                }
+              </button>
+
+
+              {/* SECURITY */}
+
+              <div className="secure-payment">
+
+                <FaLock />
+
+                <span>
+                  Secure payment powered by Razorpay
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
 
         </div>
 

@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useState,
+  useEffect,
 } from "react";
 
 const CartContext = createContext();
@@ -9,8 +10,26 @@ const CartContext = createContext();
 export const CartProvider = ({
   children,
 }) => {
+
+  // Load cart from sessionStorage
   const [cartItems, setCartItems] =
-    useState([]);
+    useState(() => {
+      const savedCart =
+        sessionStorage.getItem("cartItems");
+
+      return savedCart
+        ? JSON.parse(savedCart)
+        : [];
+    });
+
+  // Save cart whenever cart changes
+  useEffect(() => {
+    sessionStorage.setItem(
+      "cartItems",
+      JSON.stringify(cartItems)
+    );
+  }, [cartItems]);
+
 
   const addToCart = (product) => {
     setCartItems((prevItems) => {
@@ -42,6 +61,7 @@ export const CartProvider = ({
     });
   };
 
+
   const removeFromCart = (id) => {
     setCartItems((prevItems) =>
       prevItems.filter(
@@ -49,6 +69,7 @@ export const CartProvider = ({
       )
     );
   };
+
 
   const increaseQty = (id) => {
     setCartItems((prevItems) =>
@@ -63,6 +84,7 @@ export const CartProvider = ({
       )
     );
   };
+
 
   const decreaseQty = (id) => {
     setCartItems((prevItems) =>
@@ -80,9 +102,14 @@ export const CartProvider = ({
     );
   };
 
+
   const clearCart = () => {
     setCartItems([]);
+    sessionStorage.removeItem(
+      "cartItems"
+    );
   };
+
 
   const isInCart = (id) => {
     return cartItems.some(
@@ -90,11 +117,13 @@ export const CartProvider = ({
     );
   };
 
+
   const cartCount = cartItems.reduce(
     (total, item) =>
       total + item.quantity,
     0
   );
+
 
   return (
     <CartContext.Provider
@@ -113,6 +142,7 @@ export const CartProvider = ({
     </CartContext.Provider>
   );
 };
+
 
 export const useCart = () =>
   useContext(CartContext);
