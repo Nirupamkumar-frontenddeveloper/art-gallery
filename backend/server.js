@@ -6,6 +6,7 @@ dotenv.config();
 
 const paymentRoutes = require("./routes/paymentRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(
 
 app.use("/api", paymentRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api", productRoutes);
 
 app.get("/", (req, res) => {
   res.json({

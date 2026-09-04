@@ -10,6 +10,7 @@ import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import MyOrders from "./pages/MyOrders/MyOrders";
 import OrderDetails from "./pages/OrderDetails/OrderDetails";
 import AdminOrders from "./pages/AdminOrders/AdminOrders";
+import AdminProducts from "./pages/AdminProducts/AdminProducts";
 import BackButton from "./components/BackButton/BackButton";
 
 function App() {
@@ -48,6 +49,10 @@ function App() {
   path="/admin-orders"
   element={<AdminOrders />}
 />
+        <Route
+          path="/admin/products"
+          element={<AdminProducts />}
+        />
       </Routes>
 
       <Footer />

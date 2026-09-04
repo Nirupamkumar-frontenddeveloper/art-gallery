@@ -1,10 +1,11 @@
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { products } from "../../data/products";
+import { useProducts } from "../../context/productStore";
 import "./Gallery.css";
 
 function Gallery() {
   const { category } = useParams();
+  const { products } = useProducts();
 
   const filteredProducts = products.filter(
     (item) => item.category === category

@@ -2,10 +2,11 @@ import "./Home.css";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { products } from "../../data/products";
+import { useProducts } from "../../context/productStore";
 import { FaWhatsapp, FaStar } from "react-icons/fa";
 
 function Home() {
+  const { products } = useProducts();
   const bestSellers = products.filter((item) => item.bestSeller);
 
   const [reviews, setReviews] = useState([]);

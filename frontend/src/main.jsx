@@ -6,15 +6,18 @@ import App from "./App";
 import "./index.css";
 
 import { CartProvider } from "./context/CartContext";
+import { ProductProvider } from "./context/ProductContext";
 
 ReactDOM.createRoot(
   document.getElementById("root")
 ).render(
   <React.StrictMode>
     <CartProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ProductProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ProductProvider>
     </CartProvider>
   </React.StrictMode>
 );

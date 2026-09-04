@@ -1,17 +1,26 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { products } from "../../data/products";
+import { useProducts } from "../../context/productStore";
 import { useCart } from "../../context/CartContext";
 import "./ProductDetails.css";
 
 function ProductDetails() {
   const { id } = useParams();
+  const { products, isLoadingProducts } = useProducts();
   const navigate = useNavigate();
   const [showImage, setShowImage] = useState(false);
 
   const { addToCart, isInCart } = useCart();
 
   const product = products.find((item) => item.id === id);
+
+  if (isLoadingProducts && !product) {
+    return (
+      <div className="product-not-found">
+        <h1>Loading Product...</h1>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
