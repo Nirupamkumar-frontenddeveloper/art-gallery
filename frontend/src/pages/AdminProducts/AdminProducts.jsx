@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { FaEdit, FaPlus, FaTrash, FaUpload } from "react-icons/fa";
+import { FaEdit, FaEye, FaEyeSlash, FaPlus, FaTrash, FaUpload } from "react-icons/fa";
 import { API_URL, useProducts } from "../../context/productStore";
 import { products as starterProducts } from "../../data/products";
 import "./AdminProducts.css";
@@ -22,6 +22,7 @@ function AdminProducts() {
   const { products, refreshProducts } = useProducts();
   const [token, setToken] = useState(localStorage.getItem("productAdminToken") || "");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState(emptyProduct);
   const [editingId, setEditingId] = useState("");
   const [message, setMessage] = useState("");
@@ -151,7 +152,12 @@ function AdminProducts() {
       <div className="admin-login">
         <form className="admin-login-box" onSubmit={login}>
           <h1>Product Admin</h1>
-          <input type="password" placeholder="Enter Password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" required />
+          <div className="password-field">
+            <input type={showPassword ? "text" : "password"} placeholder="Enter Password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" required />
+            <button type="button" className="password-visibility-btn" onClick={() => setShowPassword((current) => !current)} aria-label={showPassword ? "Hide password" : "Show password"}>
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
           <button type="submit">Login</button>
           {message && <p className="admin-message">{message}</p>}
         </form>
