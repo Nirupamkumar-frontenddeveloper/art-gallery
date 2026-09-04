@@ -1,0 +1,48 @@
+.page-back-button-wrap {
+  max-width: 1300px;
+  margin: 24px auto -10px;
+  padding: 0 40px;
+}
+
+.checkout-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid #ddd6cc;
+  padding: 11px 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.checkout-back-btn:hover {
+  background: #252525;
+  color: #fff;
+  border-color: #252525;
+}
+
+@media (max-width: 550px) {
+  .page-back-button-wrap {
+    margin: 16px auto -4px;
+    padding: 0 14px;
+  }
+
+  .checkout-back-btn {
+    padding: 9px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 380px) {
+  .page-back-button-wrap {
+    padding: 0 10px;
+  }
+
+  .checkout-back-btn {
+    padding: 8px 10px;
+  }
+}

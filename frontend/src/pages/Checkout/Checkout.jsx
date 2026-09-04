@@ -11,7 +11,6 @@ import {
 import axios from "axios";
 
 import {
-  FaArrowLeft,
   FaBoxOpen,
   FaMapMarkerAlt,
   FaPhoneAlt,
@@ -622,19 +621,6 @@ function Checkout() {
 
           </div>
 
-
-          <button
-            className="checkout-back-btn"
-            onClick={() =>
-              navigate(-1)
-            }
-          >
-
-            <FaArrowLeft />
-
-            Back
-
-          </button>
 
         </div>
 
