@@ -130,7 +130,7 @@ function Home() {
             className="featured-card standard"
           >
             <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717653/Book_marks_vxvxc8.jpg"
+              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1789218625/ChatGPT_Image_Sep_12_2026_06_31_48_PM_wdcpky.png"
               alt="Bookmarks"
             />
             <div className="featured-overlay">
@@ -148,7 +148,7 @@ function Home() {
             className="featured-card"
           >
             <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717651/planner_qkgtr8.jpg"
+              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1789218616/ChatGPT_Image_Sep_12_2026_06_33_09_PM_bbys2o.png"
               alt="Prints"
             />
             <div className="featured-overlay">
@@ -166,7 +166,7 @@ function Home() {
             className="featured-card"
           >
             <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717650/journal2_zpzrxc.jpg"
+              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1789218617/ChatGPT_Image_Sep_12_2026_06_35_04_PM_t0xduw.png"
               alt="Journals"
             />
             <div className="featured-overlay">
@@ -184,7 +184,7 @@ function Home() {
             className="featured-card"
           >
             <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717652/Notepad_2_b82dme.jpg"
+              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1789218615/ChatGPT_Image_Sep_12_2026_06_36_01_PM_urh0v9.png"
               alt="Notepad"
             />
             <div className="featured-overlay">
@@ -202,7 +202,7 @@ function Home() {
             className="featured-card"
           >
             <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1785337298/SKM_C55826071122440_ze3glf.jpg"
+              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1789218618/ChatGPT_Image_Sep_12_2026_06_37_05_PM_umphse.png"
               alt="Paintings"
             />
             <div className="featured-overlay">
@@ -220,7 +220,7 @@ function Home() {
             className="featured-card"
           >
             <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1785341569/WhatsApp_Image_2026-07-29_at_8.36.57_PM_sjgecn.jpg"
+              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1789218620/ChatGPT_Image_Sep_12_2026_06_38_22_PM_izkgav.png"
               alt="Posters"
             />
             <div className="featured-overlay">
@@ -238,7 +238,7 @@ function Home() {
             className="featured-card"
           >
             <img
-              src="https://images.unsplash.com/photo-1516383607781-913a19294fd1?auto=format&fit=crop&w=1200&q=85"
+              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1789218616/ChatGPT_Image_Sep_12_2026_06_39_41_PM_erhu0n.png"
               alt="Postcards"
             />
             <div className="featured-overlay">
