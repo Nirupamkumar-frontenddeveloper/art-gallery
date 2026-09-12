@@ -243,7 +243,8 @@ function Checkout() {
           checkoutData.total
         );
 
-  const discountAmount = appliedCoupon?.discountAmount || 0;
+  const couponPercent = Math.min(90, Math.max(0, Number(appliedCoupon?.discountPercent) || 0));
+  const discountAmount = Math.round(totalAmount * couponPercent) / 100;
   const payableAmount = Math.max(0, totalAmount - discountAmount);
   const productIds = checkoutData.type === "single" ? [checkoutData.product.id] : checkoutData.items.map((item) => item.id);
 
@@ -878,6 +879,8 @@ function Checkout() {
                   <strong>-₹{discountAmount}</strong>
                 </div>
               )}
+
+              {appliedCoupon && <p className="coupon-calculation">₹{totalAmount} − {couponPercent}% (₹{discountAmount}) = ₹{payableAmount}</p>}
 
               <div className="total-row">
 

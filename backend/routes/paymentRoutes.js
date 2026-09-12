@@ -61,6 +61,9 @@ router.post(
         }
 
         const percent = Number(couponDoc.data().discountPercent);
+        if (!Number.isFinite(percent) || percent <= 0 || percent > 90) {
+          return res.status(400).json({ success: false, message: "This coupon has an invalid discount" });
+        }
         discountAmount = Math.round((Number(amount) * percent) / 100);
         appliedCoupon = code;
       }

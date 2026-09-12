@@ -800,3 +800,4 @@
 .coupon-row small { display: block; margin-top: 7px; font-size: 12px; }.coupon-success { color: #387143; }.coupon-error { color: #b34c4c; }
 .coupon-options { margin-top: 14px; }.coupon-options > span { display: block; margin-bottom: 8px; color: #6f6a61; font-size: 12px; font-weight: 600; }.coupon-options > div { display: flex; flex-wrap: wrap; gap: 7px; }.coupon-options button { border: 1px dashed #b08d57; border-radius: 999px; background: #fffaf2; color: #87662f; padding: 7px 10px; font-size: 12px; font-weight: 700; cursor: pointer; }
 .discount-row strong { color: #387143; }
+.coupon-calculation { margin: -2px 0 8px; color: #687168; font-size: 12px; text-align: right; }
