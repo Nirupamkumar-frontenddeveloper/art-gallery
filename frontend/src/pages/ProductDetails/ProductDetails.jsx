@@ -126,50 +126,6 @@ function ProductDetails() {
 
       </div>
 
-      <div className="reviews-section">
-
-        <h2>Customer Reviews</h2>
-
-        <div className="review-card">
-          <div className="review-top">
-            <h4>Rahul Sharma</h4>
-            <span>★★★★★</span>
-          </div>
-
-          <p>
-            Amazing quality artwork. The final painting looked even
-            better than expected.
-          </p>
-        </div>
-
-        <div className="review-card">
-          <div className="review-top">
-            <h4>Neha Verma</h4>
-            <span>★★★★★</span>
-          </div>
-
-          <p>
-            Beautiful painting and very premium packaging.
-            Worth every rupee.
-          </p>
-        </div>
-
-        {/* <div className="write-review">
-
-          <h3>Write A Review</h3>
-
-          <textarea
-            placeholder="Share your experience..."
-          />
-
-          <button className="submit-review-btn">
-            Submit Review
-          </button>
-
-        </div> */}
-
-      </div>
-
       {/* Full Screen Image Preview (Desktop Only) */}
 
       {showImage && (
