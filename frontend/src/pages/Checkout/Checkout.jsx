@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa";
 
 import { useCart } from "../../context/CartContext";
+import { API_URL } from "../../context/productStore";
 
 import "./Checkout.css";
 
@@ -51,6 +52,16 @@ function Checkout() {
 
   const [isLoadingPincode, setIsLoadingPincode] =
     useState(false);
+
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponMessage, setCouponMessage] = useState("");
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+  const [availableCoupons, setAvailableCoupons] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${API_URL}/coupons`).then(({ data }) => setAvailableCoupons(data)).catch(() => setAvailableCoupons([]));
+  }, []);
 
 
   // ================= PINCODE API =================
@@ -232,6 +243,34 @@ function Checkout() {
           checkoutData.total
         );
 
+  const discountAmount = appliedCoupon?.discountAmount || 0;
+  const payableAmount = Math.max(0, totalAmount - discountAmount);
+  const productIds = checkoutData.type === "single" ? [checkoutData.product.id] : checkoutData.items.map((item) => item.id);
+
+  const applyCoupon = async (codeToApply = couponCode) => {
+    if (!codeToApply.trim()) {
+      setCouponMessage("Enter a coupon code first");
+      return;
+    }
+
+    try {
+      setIsApplyingCoupon(true);
+      const { data } = await axios.post(`${API_URL}/coupons/validate`, {
+        code: codeToApply,
+        subtotal: totalAmount,
+        productIds,
+      });
+      setAppliedCoupon(data);
+      setCouponCode(data.code);
+      setCouponMessage(`${data.discountPercent}% discount applied`);
+    } catch (error) {
+      setAppliedCoupon(null);
+      setCouponMessage(error.response?.data?.message || "Could not apply coupon");
+    } finally {
+      setIsApplyingCoupon(false);
+    }
+  };
+
 
   // ================= VALIDATE FORM =================
 
@@ -346,6 +385,8 @@ function Checkout() {
                 Math.round(
                   totalAmount * 100
                 ),
+              couponCode: appliedCoupon?.code,
+              productIds,
             }
           );
 
@@ -482,7 +523,10 @@ function Checkout() {
                             ),
 
 
-                      totalAmount,
+                      subtotalAmount: totalAmount,
+                      discountAmount: data.discountAmount || discountAmount,
+                      couponCode: data.couponCode || appliedCoupon?.code || null,
+                      totalAmount: data.totalAmount || payableAmount,
 
                     }
                   );
@@ -807,6 +851,34 @@ function Checkout() {
               </div>
 
 
+              <div className="coupon-row">
+                <label htmlFor="coupon-code">Discount code</label>
+                <div className="coupon-controls">
+                  <input
+                    id="coupon-code"
+                    value={couponCode}
+                    onChange={(event) => {
+                      setCouponCode(event.target.value.toUpperCase());
+                      setAppliedCoupon(null);
+                      setCouponMessage("");
+                    }}
+                    placeholder="e.g. FESTIVE10"
+                  />
+                  <button type="button" onClick={applyCoupon} disabled={isApplyingCoupon}>
+                    {isApplyingCoupon ? "Applying..." : "Apply"}
+                  </button>
+                </div>
+                {couponMessage && <small className={appliedCoupon ? "coupon-success" : "coupon-error"}>{couponMessage}</small>}
+                {availableCoupons.length > 0 && <div className="coupon-options"><span>Available offers</span><div>{availableCoupons.map((coupon) => <button type="button" key={coupon.code} onClick={() => { setCouponCode(coupon.code); applyCoupon(coupon.code); }}>{coupon.code} · {coupon.discountPercent}% off</button>)}</div></div>}
+              </div>
+
+              {appliedCoupon && (
+                <div className="discount-row">
+                  <span>Discount ({appliedCoupon.code})</span>
+                  <strong>-₹{discountAmount}</strong>
+                </div>
+              )}
+
               <div className="total-row">
 
                 <span>
@@ -814,7 +886,7 @@ function Checkout() {
                 </span>
 
                 <strong>
-                  ₹{totalAmount}
+                  ₹{payableAmount}
                 </strong>
 
               </div>
@@ -1030,7 +1102,7 @@ function Checkout() {
 
                 {isProcessing
                   ? "Processing..."
-                  : `Pay ₹${totalAmount}`}
+                  : `Pay ₹${payableAmount}`}
 
               </button>
 

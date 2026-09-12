@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useProducts } from "../../context/productStore";
 import { useCart } from "../../context/CartContext";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "./ProductDetails.css";
 
 function ProductDetails() {
@@ -9,6 +10,8 @@ function ProductDetails() {
   const { products, isLoadingProducts } = useProducts();
   const navigate = useNavigate();
   const [showImage, setShowImage] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
 
   const { addToCart, isInCart } = useCart();
 
@@ -29,6 +32,15 @@ function ProductDetails() {
       </div>
     );
   }
+
+  const productImages = product.images?.length ? product.images : [product.image];
+  const selectImage = (index) => setActiveImage((index + productImages.length) % productImages.length);
+  const handleSwipeEnd = (event) => {
+    if (touchStart === null) return;
+    const distance = event.changedTouches[0].clientX - touchStart;
+    if (Math.abs(distance) > 40) selectImage(activeImage + (distance < 0 ? 1 : -1));
+    setTouchStart(null);
+  };
 
   const handleBuyNow = () => {
     navigate("/checkout", {
@@ -51,11 +63,11 @@ function ProductDetails() {
       <div className="product-details-container">
 
         <div className="product-details-image">
-          <img
-            src={product.image}
-            alt={product.title}
-            onClick={handleImageClick}
-          />
+          <div className="product-image-gallery" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={handleSwipeEnd}>
+            <img src={productImages[activeImage]} alt={`${product.title} ${activeImage + 1}`} onClick={handleImageClick} />
+            {productImages.length > 1 && <><button type="button" className="gallery-arrow gallery-arrow-left" onClick={() => selectImage(activeImage - 1)} aria-label="Previous image"><FaChevronLeft /></button><button type="button" className="gallery-arrow gallery-arrow-right" onClick={() => selectImage(activeImage + 1)} aria-label="Next image"><FaChevronRight /></button></>}
+          </div>
+          {productImages.length > 1 && <div className="product-image-thumbnails">{productImages.map((image, index) => <button type="button" className={index === activeImage ? "active" : ""} key={image} onClick={() => selectImage(index)} aria-label={`View image ${index + 1}`}><img src={image} alt="" /></button>)}</div>}
         </div>
 
         <div className="product-details-content">
@@ -166,7 +178,7 @@ function ProductDetails() {
           onClick={() => setShowImage(false)}
         >
           <img
-            src={product.image}
+            src={productImages[activeImage]}
             alt={product.title}
             onClick={(e) => e.stopPropagation()}
           />

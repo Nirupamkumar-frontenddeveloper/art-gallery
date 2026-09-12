@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaEdit, FaEye, FaEyeSlash, FaPlus, FaTrash, FaUpload } from "react-icons/fa";
+import { FaEdit, FaEye, FaEyeSlash, FaTrash, FaUpload } from "react-icons/fa";
 import { API_URL, useProducts } from "../../context/productStore";
-import { products as starterProducts } from "../../data/products";
 import "./AdminProducts.css";
 
 const emptyProduct = {
@@ -11,12 +10,13 @@ const emptyProduct = {
   title: "",
   price: "",
   image: "",
+  images: [],
   description: "",
   features: [""],
   bestSeller: false,
 };
 
-const categories = ["bookmarks", "planners", "journals", "notepad", "paintings", "posters"];
+const categories = ["bookmarks", "prints", "journals", "notepad", "paintings", "posters", "postcards"];
 
 function AdminProducts() {
   const { products, refreshProducts } = useProducts();
@@ -28,8 +28,21 @@ function AdminProducts() {
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [coupons, setCoupons] = useState([]);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponPercent, setCouponPercent] = useState("");
+  const [couponProductId, setCouponProductId] = useState("");
 
   const authConfig = { headers: { Authorization: `Bearer ${token}` } };
+
+  const loadCoupons = async () => {
+    const { data } = await axios.get(`${API_URL}/admin/coupons`, authConfig);
+    setCoupons(data);
+  };
+
+  useEffect(() => {
+    if (token) loadCoupons().catch((error) => showError(error, "Could not load coupons"));
+  }, [token]);
 
   const showError = (error, fallback) => {
     const text = error.response?.data?.message || fallback;
@@ -59,6 +72,12 @@ function AdminProducts() {
     const features = [...form.features];
     features[index] = value;
     updateField("features", features);
+  };
+
+  const updateImage = (index, value) => {
+    const images = [...form.images];
+    images[index] = value;
+    updateField("images", images);
   };
 
   const uploadImage = async (event) => {
@@ -95,7 +114,8 @@ function AdminProducts() {
     event.preventDefault();
     try {
       setSaving(true);
-      const payload = { ...form, price: Number(form.price) };
+      const allImages = [form.image, ...form.images].map((image) => image.trim()).filter(Boolean);
+      const payload = { ...form, image: allImages[0] || "", images: allImages, price: Number(form.price) };
       if (editingId) {
         await axios.put(`${API_URL}/products/${editingId}`, payload, authConfig);
       } else {
@@ -114,7 +134,7 @@ function AdminProducts() {
 
   const editProduct = (product) => {
     setEditingId(product.id);
-    setForm({ ...product, price: String(product.price), features: product.features?.length ? product.features : [""] });
+    setForm({ ...product, price: String(product.price), images: (product.images || []).filter((image) => image !== product.image), features: product.features?.length ? product.features : [""] });
     setMessage("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -134,16 +154,27 @@ function AdminProducts() {
     }
   };
 
-  const importCatalogue = async () => {
+  const saveCoupon = async (event) => {
+    event.preventDefault();
     try {
-      setSaving(true);
-      const { data } = await axios.post(`${API_URL}/products/import`, { products: starterProducts }, authConfig);
-      await refreshProducts();
-      setMessage(`${data.imported} existing products imported into Firestore.`);
+      await axios.post(`${API_URL}/admin/coupons`, { code: couponCode, discountPercent: Number(couponPercent), productId: couponProductId }, authConfig);
+      setCouponCode("");
+      setCouponPercent("");
+      setCouponProductId("");
+      await loadCoupons();
+      setMessage("Discount code saved.");
     } catch (error) {
-      showError(error, "Could not import current catalogue");
-    } finally {
-      setSaving(false);
+      showError(error, "Could not save discount code");
+    }
+  };
+
+  const deleteCoupon = async (code) => {
+    try {
+      await axios.delete(`${API_URL}/admin/coupons/${code}`, authConfig);
+      await loadCoupons();
+      setMessage("Discount code removed.");
+    } catch (error) {
+      showError(error, "Could not remove discount code");
     }
   };
 
@@ -186,6 +217,7 @@ function AdminProducts() {
           <label>Title<input value={form.title} onChange={(event) => updateField("title", event.target.value)} required /></label>
           <label>Price (₹)<input type="number" min="0" step="1" value={form.price} onChange={(event) => updateField("price", event.target.value)} required /></label>
           <label>Image URL<input type="url" value={form.image} placeholder="https://..." onChange={(event) => updateField("image", event.target.value)} required /></label>
+          <fieldset><legend>Additional product images</legend>{form.images.map((image, index) => <div className="feature-input" key={index}><input type="url" value={image} placeholder="https://..." onChange={(event) => updateImage(index, event.target.value)} /><button type="button" onClick={() => updateField("images", form.images.filter((_, imageIndex) => imageIndex !== index))}>×</button></div>)}<button className="text-button" type="button" onClick={() => updateField("images", [...form.images, ""])}>+ Add another image</button></fieldset>
           <label className="file-picker"><FaUpload /> {uploading ? "Uploading image..." : "Upload image"}<input type="file" accept="image/*" onChange={uploadImage} disabled={uploading} /></label>
           {form.image && <img className="product-image-preview" src={form.image} alt="Product preview" />}
           <label>Description<textarea rows="4" value={form.description} onChange={(event) => updateField("description", event.target.value)} required /></label>
@@ -195,10 +227,26 @@ function AdminProducts() {
         </form>
 
         <section className="product-list">
-          <div className="product-list-title"><h2>All Products ({products.length})</h2><button className="import-btn" disabled={saving} onClick={importCatalogue}><FaPlus /> Import current catalogue</button></div>
-          <p className="product-list-help">Use Import once to make the existing static products editable from here.</p>
+          <div className="product-list-title"><h2>All Products ({products.length})</h2></div>
           <div className="admin-product-grid">{products.map((product) => <article className="admin-product-card" key={product.id}><img src={product.image} alt="" /><div><span>{product.category}</span><h3>{product.title}</h3><p>₹{product.price}</p><small>{product.id}</small></div><div className="card-actions"><button aria-label={`Edit ${product.title}`} onClick={() => editProduct(product)}><FaEdit /></button><button aria-label={`Delete ${product.title}`} onClick={() => deleteProduct(product.id)}><FaTrash /></button></div></article>)}</div>
         </section>
+      </section>
+
+      <section className="coupon-manager">
+        <div>
+          <span>CHECKOUT DISCOUNTS</span>
+          <h2>Discount Codes</h2>
+          <p>Create a code customers can enter at checkout, such as FESTIVE10 for 10% off.</p>
+        </div>
+        <form onSubmit={saveCoupon} className="coupon-admin-form">
+          <input value={couponCode} onChange={(event) => setCouponCode(event.target.value.toUpperCase())} placeholder="Code, e.g. FESTIVE10" required />
+          <input type="number" min="1" max="90" value={couponPercent} onChange={(event) => setCouponPercent(event.target.value)} placeholder="Discount %" required />
+          <select value={couponProductId} onChange={(event) => setCouponProductId(event.target.value)}><option value="">All products</option>{products.map((product) => <option value={product.id} key={product.id}>{product.title}</option>)}</select>
+          <button type="submit">Save code</button>
+        </form>
+        <div className="coupon-list">
+          {coupons.length ? coupons.map((coupon) => <div key={coupon.id || coupon.code}><strong>{coupon.code}</strong><span>{coupon.discountPercent}% off · {coupon.productId ? products.find((product) => product.id === coupon.productId)?.title || "Specific product" : "All products"}</span><button type="button" onClick={() => deleteCoupon(coupon.code)}>Remove</button></div>) : <p>No discount codes yet.</p>}
+        </div>
       </section>
     </main>
   );

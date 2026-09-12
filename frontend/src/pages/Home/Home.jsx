@@ -144,16 +144,16 @@ function Home() {
           </Link>
 
           <Link
-            to="/paintings/planners"
+            to="/paintings/prints"
             className="featured-card"
           >
             <img
               src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717651/planner_qkgtr8.jpg"
-              alt="Planners"
+              alt="Prints"
             />
             <div className="featured-overlay">
               <div>
-                <h3>Planners</h3>
+                <h3>Prints</h3>
                 <span className="art-btn collection-btn">
                   Explore Collection →
                 </span>
@@ -181,7 +181,7 @@ function Home() {
 
           <Link
             to="/paintings/notepad"
-            className="featured-card wide"
+            className="featured-card"
           >
             <img
               src="https://res.cloudinary.com/dcbvuidqn/image/upload/f_auto,q_auto/v1781717652/Notepad_2_b82dme.jpg"
@@ -228,6 +228,24 @@ function Home() {
                 <h3>Posters</h3>
                 <span className="art-btn collection-btn">
                   Explore Collection →
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <Link
+            to="/paintings/postcards"
+            className="featured-card"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1516383607781-913a19294fd1?auto=format&fit=crop&w=1200&q=85"
+              alt="Postcards"
+            />
+            <div className="featured-overlay">
+              <div>
+                <h3>Postcards</h3>
+                <span className="art-btn collection-btn">
+                  Explore Collection &rarr;
                 </span>
               </div>
             </div>

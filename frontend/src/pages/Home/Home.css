@@ -247,7 +247,7 @@
 
 .featured-grid{
   display:grid;
-  grid-template-columns:2fr 1fr 1fr;
+  grid-template-columns:repeat(4, 1fr);
   grid-template-rows:repeat(2,400px);
   gap:24px;
 }
@@ -277,6 +277,10 @@
 
 .featured-card:not(.large){
   height:100%;
+}
+
+.featured-card:first-child {
+  grid-column: span 2;
 }
 
 .featured-overlay{
@@ -1408,5 +1412,11 @@ html{
 
   .interactive-star {
     font-size: 21px;
+  }
+}
+
+@media (max-width: 768px) {
+  .featured-card:first-child {
+    grid-column: auto;
   }
 }

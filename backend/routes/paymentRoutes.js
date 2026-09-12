@@ -34,7 +34,7 @@ router.post(
   "/create-order",
   async (req, res) => {
     try {
-      const { amount } = req.body;
+      const { amount, couponCode, productIds = [] } = req.body;
 
       if (
         amount === undefined ||
@@ -46,9 +46,29 @@ router.post(
           message: "Invalid amount",
         });
       }
+      let discountAmount = 0;
+      let appliedCoupon = null;
+
+      if (couponCode) {
+        const code = String(couponCode).trim().toUpperCase();
+        const couponDoc = await db.collection("coupons").doc(code).get();
+        if (!couponDoc.exists || couponDoc.data().active === false) {
+          return res.status(400).json({ success: false, message: "This coupon is no longer valid" });
+        }
+
+        if (couponDoc.data().productId && !productIds.map(String).includes(couponDoc.data().productId)) {
+          return res.status(400).json({ success: false, message: "This coupon applies to a different product" });
+        }
+
+        const percent = Number(couponDoc.data().discountPercent);
+        discountAmount = Math.round((Number(amount) * percent) / 100);
+        appliedCoupon = code;
+      }
+
+      const finalAmount = Number(amount) - discountAmount;
       const order =
         await razorpay.orders.create({
-          amount: Number(amount),
+          amount: finalAmount,
           currency: "INR",
           receipt: `receipt_${Date.now()}`,
         });
@@ -59,6 +79,9 @@ router.post(
         amount: order.amount,
         currency:
           order.currency,
+        couponCode: appliedCoupon,
+        discountAmount: discountAmount / 100,
+        totalAmount: finalAmount / 100,
       });
     } catch (error) {
       console.log(error);

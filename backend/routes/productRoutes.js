@@ -52,28 +52,38 @@ const requireAdmin = (req, res, next) => {
   }
 };
 
-const normaliseProduct = (body) => ({
-  id: String(body.id || "").trim(),
-  category: String(body.category || "").trim().toLowerCase(),
-  title: String(body.title || "").trim(),
-  price: Number(body.price),
-  image: String(body.image || "").trim(),
-  description: String(body.description || "").trim(),
-  features: Array.isArray(body.features)
-    ? body.features.map((feature) => String(feature).trim()).filter(Boolean)
-    : [],
-  bestSeller: Boolean(body.bestSeller),
-  updatedAt: new Date().toISOString(),
-});
+const normaliseProduct = (body) => {
+  const image = String(body.image || "").trim();
+  const images = Array.isArray(body.images)
+    ? body.images.map((item) => String(item).trim()).filter(Boolean)
+    : [];
+  const productImages = [...new Set([image, ...images].filter(Boolean))];
+
+  return {
+    id: String(body.id || "").trim(),
+    category: String(body.category || "").trim().toLowerCase(),
+    title: String(body.title || "").trim(),
+    price: Number(body.price),
+    image: productImages[0] || "",
+    images: productImages,
+    description: String(body.description || "").trim(),
+    features: Array.isArray(body.features)
+      ? body.features.map((feature) => String(feature).trim()).filter(Boolean)
+      : [],
+    bestSeller: Boolean(body.bestSeller),
+    updatedAt: new Date().toISOString(),
+  };
+};
 
 const validateProduct = (product) => {
   const categories = [
     "bookmarks",
-    "planners",
+    "prints",
     "journals",
     "notepad",
     "paintings",
     "posters",
+    "postcards",
   ];
 
   if (!/^[a-z0-9-]+$/.test(product.id)) {
@@ -89,6 +99,24 @@ const validateProduct = (product) => {
   return null;
 };
 
+const normaliseCoupon = (body) => ({
+  code: String(body.code || "").trim().toUpperCase(),
+  discountPercent: Number(body.discountPercent),
+  productId: String(body.productId || "").trim(),
+  active: body.active !== false,
+  updatedAt: new Date().toISOString(),
+});
+
+const validateCoupon = (coupon) => {
+  if (!/^[A-Z0-9-]{3,30}$/.test(coupon.code)) {
+    return "Coupon code must be 3–30 letters, numbers, or hyphens";
+  }
+  if (!Number.isFinite(coupon.discountPercent) || coupon.discountPercent <= 0 || coupon.discountPercent > 90) {
+    return "Discount must be between 1% and 90%";
+  }
+  return null;
+};
+
 router.post("/admin/login", (req, res) => {
   if (req.body.password !== ADMIN_PASSWORD) {
     return res.status(401).json({ message: "Incorrect password" });
@@ -97,10 +125,82 @@ router.post("/admin/login", (req, res) => {
   res.json({ token: createToken(), expiresIn: TOKEN_TTL_MS });
 });
 
+router.get("/admin/coupons", requireAdmin, async (req, res) => {
+  try {
+    const snapshot = await db.collection("coupons").get();
+    res.json(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+  } catch (error) {
+    console.error("Fetch coupons error:", error);
+    res.status(500).json({ message: "Could not fetch coupons" });
+  }
+});
+
+router.get("/coupons", async (req, res) => {
+  try {
+    const snapshot = await db.collection("coupons").get();
+    res.json(snapshot.docs.map((doc) => ({ code: doc.id, ...doc.data() })).filter((coupon) => coupon.active !== false));
+  } catch (error) {
+    console.error("Fetch public coupons error:", error);
+    res.status(500).json({ message: "Could not fetch coupons" });
+  }
+});
+
+router.post("/admin/coupons", requireAdmin, async (req, res) => {
+  try {
+    const coupon = normaliseCoupon(req.body);
+    const error = validateCoupon(coupon);
+    if (error) return res.status(400).json({ message: error });
+
+    await db.collection("coupons").doc(coupon.code).set(coupon, { merge: true });
+    res.status(201).json(coupon);
+  } catch (error) {
+    console.error("Create coupon error:", error);
+    res.status(500).json({ message: "Could not save coupon" });
+  }
+});
+
+router.delete("/admin/coupons/:code", requireAdmin, async (req, res) => {
+  try {
+    await db.collection("coupons").doc(String(req.params.code).toUpperCase()).delete();
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Delete coupon error:", error);
+    res.status(500).json({ message: "Could not delete coupon" });
+  }
+});
+
+router.post("/coupons/validate", async (req, res) => {
+  try {
+    const code = String(req.body.code || "").trim().toUpperCase();
+    const subtotal = Number(req.body.subtotal);
+    const productIds = Array.isArray(req.body.productIds) ? req.body.productIds.map(String) : [];
+    if (!code || !Number.isFinite(subtotal) || subtotal <= 0) {
+      return res.status(400).json({ message: "Enter a valid coupon code" });
+    }
+
+    const couponDoc = await db.collection("coupons").doc(code).get();
+    if (!couponDoc.exists || couponDoc.data().active === false) {
+      return res.status(404).json({ message: "This coupon is not valid" });
+    }
+
+    const coupon = couponDoc.data();
+    if (coupon.productId && !productIds.includes(coupon.productId)) {
+      return res.status(400).json({ message: "This coupon applies to a different product" });
+    }
+    const discountAmount = Math.round((subtotal * Number(coupon.discountPercent)) * 100) / 100;
+    res.json({ code, discountPercent: coupon.discountPercent, discountAmount, total: subtotal - discountAmount });
+  } catch (error) {
+    console.error("Validate coupon error:", error);
+    res.status(500).json({ message: "Could not validate coupon" });
+  }
+});
+
 router.get("/products", async (req, res) => {
   try {
     const snapshot = await db.collection("products").get();
-    const products = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const products = snapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .filter((product) => !product.deleted);
     res.json(products);
   } catch (error) {
     console.error("Fetch products error:", error);
@@ -135,34 +235,6 @@ router.post("/products", requireAdmin, async (req, res) => {
   } catch (error) {
     console.error("Create product error:", error);
     res.status(500).json({ message: "Could not create product" });
-  }
-});
-
-router.post("/products/import", requireAdmin, async (req, res) => {
-  try {
-    if (!Array.isArray(req.body.products)) {
-      return res.status(400).json({ message: "Products array is required" });
-    }
-
-    const batch = db.batch();
-    let imported = 0;
-
-    req.body.products.forEach((item) => {
-      const product = normaliseProduct(item);
-      if (validateProduct(product)) return;
-      batch.set(
-        db.collection("products").doc(product.id),
-        { ...product, createdAt: item.createdAt || product.updatedAt },
-        { merge: true }
-      );
-      imported += 1;
-    });
-
-    await batch.commit();
-    res.json({ success: true, imported });
-  } catch (error) {
-    console.error("Import products error:", error);
-    res.status(500).json({ message: "Could not import products" });
   }
 });
 
