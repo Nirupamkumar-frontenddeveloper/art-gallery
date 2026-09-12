@@ -191,7 +191,7 @@ router.post("/coupons/validate", async (req, res) => {
     if (!Number.isFinite(discountPercent) || discountPercent <= 0 || discountPercent > 90) {
       return res.status(400).json({ message: "This coupon has an invalid discount" });
     }
-    const discountAmount = Math.round((subtotal * discountPercent) * 100) / 100;
+    const discountAmount = Math.round((subtotal * discountPercent / 100) * 100) / 100;
     res.json({ code, discountPercent, discountAmount, total: subtotal - discountAmount });
   } catch (error) {
     console.error("Validate coupon error:", error);
