@@ -81,8 +81,8 @@ function AdminProducts() {
   };
 
   const uploadImage = async (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
 
     const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
@@ -93,15 +93,20 @@ function AdminProducts() {
 
     try {
       setUploading(true);
-      const uploadData = new FormData();
-      uploadData.append("file", file);
-      uploadData.append("upload_preset", uploadPreset);
-      const { data } = await axios.post(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        uploadData
-      );
-      updateField("image", data.secure_url);
-      setMessage("Image uploaded successfully.");
+      const uploadedImages = await Promise.all(files.map(async (file) => {
+        const uploadData = new FormData();
+        uploadData.append("file", file);
+        uploadData.append("upload_preset", uploadPreset);
+        const { data } = await axios.post(
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+          uploadData
+        );
+        return data.secure_url;
+      }));
+      const nextImages = [...(form.image ? [form.image] : []), ...form.images, ...uploadedImages];
+      updateField("image", nextImages[0] || "");
+      updateField("images", nextImages.slice(1));
+      setMessage(`${uploadedImages.length} image${uploadedImages.length === 1 ? "" : "s"} uploaded successfully.`);
     } catch {
       setMessage("Image upload failed. Please try again or paste an image URL.");
     } finally {
@@ -218,8 +223,8 @@ function AdminProducts() {
           <label>Price (₹)<input type="number" min="0" step="1" value={form.price} onChange={(event) => updateField("price", event.target.value)} required /></label>
           <label>Image URL<input type="url" value={form.image} placeholder="https://..." onChange={(event) => updateField("image", event.target.value)} required /></label>
           <fieldset><legend>Additional product images</legend>{form.images.map((image, index) => <div className="feature-input" key={index}><input type="url" value={image} placeholder="https://..." onChange={(event) => updateImage(index, event.target.value)} /><button type="button" onClick={() => updateField("images", form.images.filter((_, imageIndex) => imageIndex !== index))}>×</button></div>)}<button className="text-button" type="button" onClick={() => updateField("images", [...form.images, ""])}>+ Add another image</button></fieldset>
-          <label className="file-picker"><FaUpload /> {uploading ? "Uploading image..." : "Upload image"}<input type="file" accept="image/*" onChange={uploadImage} disabled={uploading} /></label>
-          {form.image && <img className="product-image-preview" src={form.image} alt="Product preview" />}
+          <label className="file-picker"><FaUpload /> {uploading ? "Uploading images..." : "Upload images"}<input type="file" accept="image/*" multiple onChange={uploadImage} disabled={uploading} /></label>
+          {(form.image || form.images.length > 0) && <div className="product-image-previews">{[form.image, ...form.images].filter(Boolean).map((image, index) => <img className="product-image-preview" src={image} alt={`Product preview ${index + 1}`} key={`${image}-${index}`} />)}</div>}
           <label>Description<textarea rows="4" value={form.description} onChange={(event) => updateField("description", event.target.value)} required /></label>
           <fieldset><legend>Features</legend>{form.features.map((feature, index) => <div className="feature-input" key={index}><input value={feature} placeholder="e.g. Free shipping" onChange={(event) => updateFeature(index, event.target.value)} />{form.features.length > 1 && <button type="button" onClick={() => updateField("features", form.features.filter((_, itemIndex) => itemIndex !== index))}>×</button>}</div>)}<button className="text-button" type="button" onClick={() => updateField("features", [...form.features, ""])}>+ Add feature</button></fieldset>
           <label className="checkbox-label"><input type="checkbox" checked={form.bestSeller} onChange={(event) => updateField("bestSeller", event.target.checked)} /> Show in Best Sellers</label>
