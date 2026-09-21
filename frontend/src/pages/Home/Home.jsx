@@ -268,6 +268,7 @@ function Home() {
               <img
                 src={product.image}
                 alt={product.title}
+                loading="lazy"
               />
 
               <div className="product-content">

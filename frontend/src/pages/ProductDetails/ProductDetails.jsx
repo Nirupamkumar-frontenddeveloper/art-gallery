@@ -67,7 +67,7 @@ function ProductDetails() {
             <img src={productImages[activeImage]} alt={`${product.title} ${activeImage + 1}`} onClick={handleImageClick} />
             {productImages.length > 1 && <><button type="button" className="gallery-arrow gallery-arrow-left" onClick={() => selectImage(activeImage - 1)} aria-label="Previous image"><FaChevronLeft /></button><button type="button" className="gallery-arrow gallery-arrow-right" onClick={() => selectImage(activeImage + 1)} aria-label="Next image"><FaChevronRight /></button></>}
           </div>
-          {productImages.length > 1 && <div className="product-image-thumbnails">{productImages.map((image, index) => <button type="button" className={index === activeImage ? "active" : ""} key={image} onClick={() => selectImage(index)} aria-label={`View image ${index + 1}`}><img src={image} alt="" /></button>)}</div>}
+          {productImages.length > 1 && <div className="product-image-thumbnails">{productImages.map((image, index) => <button type="button" className={index === activeImage ? "active" : ""} key={image} onClick={() => selectImage(index)} aria-label={`View image ${index + 1}`}><img src={image} alt="" loading="lazy" /></button>)}</div>}
         </div>
 
         <div className="product-details-content">

@@ -43,6 +43,7 @@ function Gallery() {
               <img
                 src={item.image}
                 alt={item.title}
+                loading="lazy"
               />
             </div>
 

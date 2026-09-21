@@ -4,6 +4,13 @@ const db = require("../firebase");
 
 const router = express.Router();
 
+const PRODUCT_CACHE_TTL_MS = 60 * 1000;
+let productCache = null;
+
+const clearProductCache = () => {
+  productCache = null;
+};
+
 // Move this to an environment variable before sharing server source publicly.
 const ADMIN_PASSWORD = "Sonal1234";
 const TOKEN_TTL_MS = 8 * 60 * 60 * 1000;
@@ -201,10 +208,21 @@ router.post("/coupons/validate", async (req, res) => {
 
 router.get("/products", async (req, res) => {
   try {
+    if (productCache && productCache.expiresAt > Date.now()) {
+      res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+      return res.json(productCache.products);
+    }
+
     const snapshot = await db.collection("products").get();
     const products = snapshot.docs
       .map((doc) => ({ id: doc.id, ...doc.data() }))
       .filter((product) => !product.deleted);
+
+    productCache = {
+      products,
+      expiresAt: Date.now() + PRODUCT_CACHE_TTL_MS,
+    };
+    res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
     res.json(products);
   } catch (error) {
     console.error("Fetch products error:", error);
@@ -235,6 +253,7 @@ router.post("/products", requireAdmin, async (req, res) => {
     }
 
     await reference.set({ ...product, createdAt: product.updatedAt });
+    clearProductCache();
     res.status(201).json(product);
   } catch (error) {
     console.error("Create product error:", error);
@@ -254,6 +273,7 @@ router.put("/products/:id", requireAdmin, async (req, res) => {
     }
 
     await reference.update(product);
+    clearProductCache();
     res.json(product);
   } catch (error) {
     console.error("Update product error:", error);
@@ -267,6 +287,7 @@ router.delete("/products/:id", requireAdmin, async (req, res) => {
       { deleted: true, updatedAt: new Date().toISOString() },
       { merge: true }
     );
+    clearProductCache();
     res.json({ success: true });
   } catch (error) {
     console.error("Delete product error:", error);
